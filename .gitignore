@@ -1,0 +1,52 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs/
+*.log
+logs/*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+
+# Docker files
+docker-compose.override.yml
+docker-compose.debug.yml
+docker-compose.dev.yml
+Dockerfile*
+
+# Vite build output
+dist/
+.vite/
+
+# Miscellaneous
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Typescript
+*.tsbuildinfo
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Cache
+.cache/
+.cache-loader/
+
+# Database files
+*.sqlite
+*.sqlite3
+pgdata/

@@ -1,0 +1,37 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=mon_projet_db
+    depends_on:
+      - postgres
+
+  vite:
+    build: .
+    command: npm run vite
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    working_dir: /app
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: mon_projet_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
