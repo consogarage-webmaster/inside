@@ -1,37 +1,49 @@
+# version: '3.8'
+
 services:
+  # Definition of the API container
   app:
-    build: .
-    volumes:
-      - .:/app
-      - /app/node_modules
+    # Build the container from the current directory using the specified Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    command: sh -c "rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules && npm run start"
+
+    # Map port 3000 of the container to port 3000 on the host
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=postgres
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=mon_projet_db
-    depends_on:
-      - postgres
 
-  vite:
-    build: .
-    command: npm run vite
+    # Name the container
+    container_name: inside
+
+    # Mount the current directory into the container
     volumes:
-      - .:/app
-      - /app/node_modules
-    ports:
-      - "3001:3001"
-    working_dir: /app
-    depends_on:
-      - app
+      - ./:/usr/src/app
 
-  postgres:
+    # Define the environment variables needed for the application
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: inside
+      DB_PASS: inside
+      DB_NAME: inside
+
+    # Ensure the application waits for the database to start
+    depends_on:
+      - db
+
+  # Definition of the database container
+  db:
     image: postgres:14
     environment:
-      POSTGRES_DB: mon_projet_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: inside
+      POSTGRES_PASSWORD: inside
+      POSTGRES_DB: inside
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data: # Named volume for persistent database storage

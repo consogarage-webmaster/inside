@@ -1,43 +1,50 @@
-// src/index.js
+
 import express from 'express';
-import sequelize from './db.js';
-import Affaire from './models/Affaire.js'; // Import du modèle Affaire
+import dotenv from 'dotenv';
+import sequelize from './config/db.js';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware pour parser les JSON
+// Test de connexion à la base de données
+sequelize.authenticate()
+  .then(() => console.log('Connection has been established successfully.'))
+  .catch(err => console.error('Unable to connect to the database:', err));
+import User from './models/user.js';
+
+sequelize.sync({ force: true })
+  .then(() => {
+    console.log('Database & tables created!');
+  });
+
 app.use(express.json());
 
-// Exemple de route
-app.get('/', async (req, res) => {
-  try {
-    const affaires = await Affaire.findAll();
-    res.json(affaires);
-  } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des affaires.' });
-  }
+app.get('/', (req, res) => {
+  res.json({ message: 'Hello, Sequelize!' });
 });
+app.post('/users', async (req, res) => {
+    try {
+      const { firstName, lastName, email } = req.body;
+      const user = await User.create({ firstName, lastName, email });
+      res.status(201).json(user);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+  
+  app.get('/users', async (req, res) => {
+    try {
+      const users = await User.findAll();
+      res.json(users);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 
-// Démarrage du serveur
-const startServer = async () => {
-  try {
-    // Connexion à la base de données
-    await sequelize.authenticate();
-    console.log('Connexion à la base de données réussie.');
-
-    // Synchronisation des modèles
-    await sequelize.sync({ alter: true });
-    console.log('Les tables ont été synchronisées.');
-
-    // Démarrage du serveur Express
-    app.listen(PORT, () => {
-      console.log(`Le serveur tourne sur http://localhost:${PORT}`);
-    });
-  } catch (error) {
-    console.error('Erreur lors du démarrage du serveur :', error);
-  }
-};
-
-// Appel de la fonction pour démarrer le serveur
-startServer();
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
