@@ -21,8 +21,8 @@ pids/
 # Docker files
 docker-compose.override.yml
 docker-compose.debug.yml
-docker-compose.dev.yml
-Dockerfile*
+# docker-compose.dev.yml
+# Dockerfile*
 
 # Vite build output
 dist/

@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: sh -c "rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules && npm run dev"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: inside
+      DB_PASS: inside
+      DB_NAME: inside
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/usr/src/app
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: inside
+      POSTGRES_PASSWORD: inside
+      POSTGRES_DB: inside
+    volumes:
+      - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inside -d inside"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
