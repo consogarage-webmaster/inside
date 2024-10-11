@@ -6,13 +6,15 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import sequelize from './config/db.js';
-
+import authenticationController from './controllers/authenticationController.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
+import verifyToken from './middlewares/verifyToken.js';
+import jwt from 'jsonwebtoken';
+const JWT_SECRET = 'your_jwt_secret_key'; 
 const app = express();
 const PORT = process.env.PORT || 3000;
+import User from './models/user.js';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', './src/views');
@@ -23,8 +25,8 @@ app.set('view engine', 'ejs');
 sequelize.authenticate()
   .then(() => console.log('Connection has been established successfully.'))
   .catch(err => console.error('Unable to connect to the database:', err));
-import User from './models/user.js';
 
+// import verifyToken from './middlewares/verifyToken.js';
 sequelize.sync({ force: true })
   .then(() => {
     console.log('Database & tables created!');
@@ -32,9 +34,16 @@ sequelize.sync({ force: true })
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.render('index.ejs');
+app.get('/', verifyToken, (req, res) => {
+  res.render('index.ejs',  {
+    userId: req.userId,
+    role: req.role,
 });
+});
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
+});
+app.post('/login', authenticationController.submitLogin);
 app.post('/users', async (req, res) => {
     try {
       const { firstName, lastName, email } = req.body;

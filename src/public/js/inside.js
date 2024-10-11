@@ -1,9 +1,21 @@
-const customerGroups = [16,17,18,19,20,21,27]
+const customerGroups = [13,16,17,18,19,20,21,27]
 document.addEventListener("DOMContentLoaded", function () {
     const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG&filter[id_default_group]=${customerGroups}&limit=10`;
     const customerTable = document.querySelector('#customer-list'); // Make sure this is a <table>
 
     async function fetchCustomers() {
+        // Sélecteur de secteur
+        const container = document.querySelector('#sector-selector');
+        let options = '';
+        customerGroups.forEach((group)=>{
+            options += `<option value="${group}">${group}</option>`;
+        })
+        container.innerHTML = `<div class="select">
+    <select>
+        <option value="all" selected>Tous</option>
+        ${options}
+    </select>
+</div>`;
         try {
             const response = await fetch(apiCustomersUrl);
             if (!response.ok) {
@@ -253,3 +265,119 @@ const computer={
     return `${day}/${month}/${year}`; // Return formatted date as DD/MM/YYYY
     }
 }
+
+// Authentication
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.querySelector('#loginForm');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = loginForm.username.value; // Assuming your input field has the name "username"
+            const password = loginForm.password.value; // Assuming your input field has the name "password"
+            await authenticationController.submitLogin(username, password);
+        });
+    }
+});
+
+const authenticationController = {
+    submitLogin: async (username, password) => {
+        const loginUrl = '/login'; 
+
+        // Prepare the request options
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password }) // Include username and password
+        };
+
+        try {
+            const response = await fetch(loginUrl, requestOptions);
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+
+            const data = await response.json(); // Assuming the server responds with JSON
+            console.log('Login successful:', data);
+
+            // Store the token in localStorage
+            localStorage.setItem('jwtToken', data.token); 
+
+            // Redirect after successful login
+            // window.location.href = '/dashboard'; // Update with your desired redirect URL
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('Login failed. Please check your username and password.'); // Inform user of the error
+        }
+    }
+};
+
+
+// Send Token with hrefs
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll('.send-token');
+
+    links.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent the default link behavior
+
+            const url = link.getAttribute('href'); // Get the URL from the href attribute
+            const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+
+            // Check if the token exists
+            if (!token) {
+                console.error('No token found. User may not be authenticated.');
+                return; // Exit if no token is found
+            }
+
+            // Store the token in sessionStorage to use it in the next page
+            sessionStorage.setItem('jwtToken', token);
+
+            // Now navigate to the desired URL
+            window.location.href = url; // Redirect to the URL
+        });
+    });
+});
+
+
+
+
+
+async function apiFetch(url, options = {}) {
+    const token = localStorage.getItem('jwtToken');
+
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+    };
+
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, {
+        ...options,
+        headers,
+    });
+
+    // Log the response status and text for debugging
+    console.log('Response Status:', response.status);
+    const responseText = await response.text(); // Read response as text
+    console.log('Response Text:', responseText); // Log the response text
+
+    // Check if response is ok before parsing as JSON
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+
+    try {
+        return JSON.parse(responseText); // Attempt to parse the response as JSON
+    } catch (e) {
+        throw new Error('Failed to parse JSON: ' + e.message);
+    }
+}
+
+
+
