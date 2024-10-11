@@ -1,12 +1,23 @@
+dotenv.config();
 
 import express from 'express';
 import dotenv from 'dotenv';
+// import ejs from 'ejs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import sequelize from './config/db.js';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', './src/views');
+app.set('view engine', 'ejs');
+
 
 // Test de connexion à la base de données
 sequelize.authenticate()
@@ -22,7 +33,7 @@ sequelize.sync({ force: true })
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Hello, Sequelize!' });
+  res.render('index.ejs');
 });
 app.post('/users', async (req, res) => {
     try {

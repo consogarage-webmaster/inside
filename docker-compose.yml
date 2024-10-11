@@ -1,49 +1,38 @@
-# version: '3.8'
+version: "3.8"
 
 services:
-  # Definition of the API container
   app:
-    # Build the container from the current directory using the specified Dockerfile
     build:
       context: .
       dockerfile: Dockerfile
-
-    command: sh -c "rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules && npm run start"
-
-    # Map port 3000 of the container to port 3000 on the host
-    ports:
-      - "3000:3000"
-
-    # Name the container
-    container_name: inside
-
-    # Mount the current directory into the container
-    volumes:
-      - ./:/usr/src/app
-
-    # Define the environment variables needed for the application
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: inside
       DB_PASS: inside
       DB_NAME: inside
-
-    # Ensure the application waits for the database to start
+    ports:
+      - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/usr/src/app
 
-  # Definition of the database container
   db:
     image: postgres:14
     environment:
       POSTGRES_USER: inside
       POSTGRES_PASSWORD: inside
       POSTGRES_DB: inside
-    ports:
-      - "5433:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inside -d inside"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
 
 volumes:
-  db-data: # Named volume for persistent database storage
+  db-data:
