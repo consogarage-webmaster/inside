@@ -1,0 +1,28 @@
+<%- include('../partials/head.ejs') %>
+<section class="container">
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Société</th>
+                <th>Email</th>
+                <th>Code Client</th>
+                <th id="sector-selector">Secteur</th>
+                <th>Inscription</th>
+            </tr>
+        </thead>
+        <tbody id="customer-list">
+            <% customers.forEach(customer => { %>
+                <tr>
+                    <td><%= customer.firstname %> <%= customer.lastname %></td>
+                    <td><%= customer.company %></td>
+                    <td><%= customer.email %></td>
+                    <td><%= customer.codeital %></td>
+                    <td><%= customer.id_group_default %></td>
+                    <td><%= customer.date_creation %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</section>
+<%- include('../partials/foot.ejs') %>

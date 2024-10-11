@@ -1,96 +1,96 @@
 const customerGroups = [13,16,17,18,19,20,21,27]
 document.addEventListener("DOMContentLoaded", function () {
-    const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG&filter[id_default_group]=${customerGroups}&limit=10`;
-    const customerTable = document.querySelector('#customer-list'); // Make sure this is a <table>
+//     const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG&filter[id_default_group]=${customerGroups}&limit=10`;
+//     const customerTable = document.querySelector('#customer-list'); // Make sure this is a <table>
 
-    async function fetchCustomers() {
-        // Sélecteur de secteur
-        const container = document.querySelector('#sector-selector');
-        let options = '';
-        customerGroups.forEach((group)=>{
-            options += `<option value="${group}">${group}</option>`;
-        })
-        container.innerHTML = `<div class="select">
-    <select>
-        <option value="all" selected>Tous</option>
-        ${options}
-    </select>
-</div>`;
-        try {
-            const response = await fetch(apiCustomersUrl);
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
+//     async function fetchCustomers() {
+//         // Sélecteur de secteur
+//         const container = document.querySelector('#sector-selector');
+//         let options = '';
+//         customerGroups.forEach((group)=>{
+//             options += `<option value="${group}">${group}</option>`;
+//         })
+//         container.innerHTML = `<div class="select">
+//     <select>
+//         <option value="all" selected>Tous</option>
+//         ${options}
+//     </select>
+// </div>`;
+//         try {
+//             const response = await fetch(apiCustomersUrl);
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok ' + response.statusText);
+//             }
 
-            const data = await response.text(); // Get response as text
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data, "application/xml");
+//             const data = await response.text(); // Get response as text
+//             const parser = new DOMParser();
+//             const xmlDoc = parser.parseFromString(data, "application/xml");
 
-            const customers = xmlDoc.getElementsByTagName("customer");
-            const customerArray = [];
+//             const customers = xmlDoc.getElementsByTagName("customer");
+//             const customerArray = [];
 
-            for (let i = 0; i < customers.length; i++) {
-                const id = customers[i].getAttribute("id");
-                const href = customers[i].getAttribute("xlink:href");
-                customerArray.push({ id, href });
-            }
+//             for (let i = 0; i < customers.length; i++) {
+//                 const id = customers[i].getAttribute("id");
+//                 const href = customers[i].getAttribute("xlink:href");
+//                 customerArray.push({ id, href });
+//             }
 
-            // Fetch details for each customer
-            for (const customer of customerArray) {
-                await fetchCustomerDetails(customer.id);
-            }
+//             // Fetch details for each customer
+//             for (const customer of customerArray) {
+//                 await fetchCustomerDetails(customer.id);
+//             }
 
-        } catch (error) {
-            console.error('Error fetching customers:', error);
-        }
-    }
+//         } catch (error) {
+//             console.error('Error fetching customers:', error);
+//         }
+//     }
 
-    async function fetchCustomerDetails(customerId) {
-        const customerUrl = `https://www.consogarage.com/api/customers/${customerId}?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG`;
+//     async function fetchCustomerDetails(customerId) {
+//         const customerUrl = `https://www.consogarage.com/api/customers/${customerId}?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG`;
 
-        try {
-            const response = await fetch(customerUrl);
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
+//         try {
+//             const response = await fetch(customerUrl);
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok ' + response.statusText);
+//             }
 
-            const data = await response.text(); // Get response as text
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data, "application/xml");
+//             const data = await response.text(); // Get response as text
+//             const parser = new DOMParser();
+//             const xmlDoc = parser.parseFromString(data, "application/xml");
 
-            // Extract required fields
-            const customerInfo = xmlDoc.getElementsByTagName("customer")[0];
-            const firstname = customerInfo.getElementsByTagName("firstname")[0].textContent;
-            const lastname = customerInfo.getElementsByTagName("lastname")[0]?.textContent || 'N/A';
-            const company = customerInfo.getElementsByTagName("company")[0].textContent;
-            const id_group_default = customerInfo.getElementsByTagName("id_default_group")[0].textContent;
-            const email = customerInfo.getElementsByTagName("email")[0].textContent;
-            const codeital = customerInfo.getElementsByTagName("website")[0]?.textContent || ''; // Optional field
-            const date_creation = customerInfo.getElementsByTagName("date_add")[0].textContent;
+//             // Extract required fields
+//             const customerInfo = xmlDoc.getElementsByTagName("customer")[0];
+//             const firstname = customerInfo.getElementsByTagName("firstname")[0].textContent;
+//             const lastname = customerInfo.getElementsByTagName("lastname")[0]?.textContent || 'N/A';
+//             const company = customerInfo.getElementsByTagName("company")[0].textContent;
+//             const id_group_default = customerInfo.getElementsByTagName("id_default_group")[0].textContent;
+//             const email = customerInfo.getElementsByTagName("email")[0].textContent;
+//             const codeital = customerInfo.getElementsByTagName("website")[0]?.textContent || ''; // Optional field
+//             const date_creation = customerInfo.getElementsByTagName("date_add")[0].textContent;
 
-            if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
-                return; // Skip this customer
-            }
+//             if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
+//                 return; // Skip this customer
+//             }
 
-            // Append a new row to the customer table
-            const newRow = customerTable.insertRow();
-            newRow.innerHTML = `
-                <td><button class="js-modal-trigger button is-small" data-target="mainmodal" data-customer-id="${customerId}">
-                    Open
-                </button>${firstname} ${lastname}</td>
-                <td>${company}</td>
-                <td>${email}</td>
-                <td>${codeital}</td>
-                <td>${id_group_default}</td>
-                <td>${computer.dateFr(date_creation)}</td>
-            `;
+//             // Append a new row to the customer table
+//             const newRow = customerTable.insertRow();
+//             newRow.innerHTML = `
+//                 <td><button class="js-modal-trigger button is-small" data-target="mainmodal" data-customer-id="${customerId}">
+//                     Open
+//                 </button>${firstname} ${lastname}</td>
+//                 <td>${company}</td>
+//                 <td>${email}</td>
+//                 <td>${codeital}</td>
+//                 <td>${id_group_default}</td>
+//                 <td>${computer.dateFr(date_creation)}</td>
+//             `;
 
-        } catch (error) {
-            console.error('Error fetching customer details:', error);
-        }
+//         } catch (error) {
+//             console.error('Error fetching customer details:', error);
+//         }
 
-        initModalTriggers();
-    }
+//         initModalTriggers();
+//     }
 
     async function fetchCustomerOrders(customerId) {
         const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    fetchCustomers();
+    // fetchCustomers();
 });
 const computer={
     dateFr :(dateString)=>{
@@ -314,70 +314,122 @@ const authenticationController = {
     }
 };
 
+// document.addEventListener("DOMContentLoaded", function () {
+    // Function to fetch protected page data
+    function fetchProtectedPage(url) {
+        // Get the token from local storage
+        const token = localStorage.getItem('jwtToken');
+        console.log('token ' + token)
 
-// Send Token with hrefs
-document.addEventListener("DOMContentLoaded", function () {
-    const links = document.querySelectorAll('.send-token');
-
-    links.forEach(link => {
-        link.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent the default link behavior
-
-            const url = link.getAttribute('href'); // Get the URL from the href attribute
-            const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
-
-            // Check if the token exists
-            if (!token) {
-                console.error('No token found. User may not be authenticated.');
-                return; // Exit if no token is found
+        // Fetch the page data
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('Access denied');
             }
+        })
+        .then(html => {
+            // Render the content
+            document.open();
+            document.write(html);
+            document.close();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Access denied: Please log in');
+        });
+    }
+    initProtectedLinks()
+   
+// });
+ // Add event listeners to all links that should call the fetch function
+ document.addEventListener('DOMContentLoaded', () => {
+    // Select all the links you want to bind the function to
+    initProtectedLinks();
+});
+function initProtectedLinks(){
+    const protectedLinks = document.querySelectorAll('.protected-link');
 
-            // Store the token in sessionStorage to use it in the next page
-            sessionStorage.setItem('jwtToken', token);
-
-            // Now navigate to the desired URL
-            window.location.href = url; // Redirect to the URL
+    // Add click event listeners to those links
+    protectedLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default link behavior
+            alert('ok')
+            const url = event.target.getAttribute('href'); // Get the URL from the link
+            fetchProtectedPage(url); // Call the fetch function with the URL
         });
     });
-});
-
-
-
-
-
-async function apiFetch(url, options = {}) {
-    const token = localStorage.getItem('jwtToken');
-
-    const headers = {
-        'Content-Type': 'application/json',
-        ...options.headers,
-    };
-
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(url, {
-        ...options,
-        headers,
-    });
-
-    // Log the response status and text for debugging
-    console.log('Response Status:', response.status);
-    const responseText = await response.text(); // Read response as text
-    console.log('Response Text:', responseText); // Log the response text
-
-    // Check if response is ok before parsing as JSON
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
-    }
-
-    try {
-        return JSON.parse(responseText); // Attempt to parse the response as JSON
-    } catch (e) {
-        throw new Error('Failed to parse JSON: ' + e.message);
-    }
 }
+// // Send Token with hrefs
+// document.addEventListener("DOMContentLoaded", function () {
+//     const links = document.querySelectorAll('.send-token');
+
+//     links.forEach(link => {
+//         link.addEventListener('click', (event) => {
+//             event.preventDefault(); // Prevent the default link behavior
+
+//             const url = link.getAttribute('href'); // Get the URL from the href attribute
+//             const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
+
+//             // Check if the token exists
+//             if (!token) {
+//                 console.error('No token found. User may not be authenticated.');
+//                 return; // Exit if no token is found
+//             }
+
+//             // Store the token in sessionStorage to use it in the next page
+//             sessionStorage.setItem('jwtToken', token);
+
+//             // Now navigate to the desired URL
+//             window.location.href = url; // Redirect to the URL
+//         });
+//     });
+// });
+
+
+
+
+
+// async function apiFetch(url, options = {}) {
+//     const token = localStorage.getItem('jwtToken');
+
+//     const headers = {
+//         'Content-Type': 'application/json',
+//         ...options.headers,
+//     };
+
+//     if (token) {
+//         headers['Authorization'] = `Bearer ${token}`;
+//     }
+
+//     const response = await fetch(url, {
+//         ...options,
+//         headers,
+//     });
+
+//     // Log the response status and text for debugging
+//     console.log('Response Status:', response.status);
+//     const responseText = await response.text(); // Read response as text
+//     console.log('Response Text:', responseText); // Log the response text
+
+//     // Check if response is ok before parsing as JSON
+//     if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//     }
+
+//     try {
+//         return JSON.parse(responseText); // Attempt to parse the response as JSON
+//     } catch (e) {
+//         throw new Error('Failed to parse JSON: ' + e.message);
+//     }
+// }
 
 
 

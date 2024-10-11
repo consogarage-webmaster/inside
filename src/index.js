@@ -15,6 +15,8 @@ const JWT_SECRET = 'your_jwt_secret_key';
 const app = express();
 const PORT = process.env.PORT || 3000;
 import User from './models/user.js';
+import { authenticateToken, generateToken } from './utils/auth.js'
+import customerController from './controllers/customerController.js';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', './src/views');
@@ -34,16 +36,14 @@ sequelize.sync({ force: true })
 
 app.use(express.json());
 
-app.get('/', verifyToken, (req, res) => {
-  res.render('index.ejs',  {
-    userId: req.userId,
-    role: req.role,
-});
+app.get('/', (req, res) => {
+  res.render('index.ejs');
 });
 app.get('/login', (req, res) => {
   res.render('login.ejs');
 });
 app.post('/login', authenticationController.submitLogin);
+app.get('/ital-clients', customerController.italCustomers);
 app.post('/users', async (req, res) => {
     try {
       const { firstName, lastName, email } = req.body;

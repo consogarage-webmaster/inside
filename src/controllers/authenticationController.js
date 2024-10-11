@@ -1,30 +1,24 @@
 import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/auth.js';
 
 // You can move this secret key to an environment variable for better security
 const JWT_SECRET = 'your_jwt_secret_key';
 
 const authenticationController = {
     submitLogin: async (req, res) => {
-        const { username, password } = req.body; // Get username and password from request body
+        const { username, password } = req.body;
+        const user = { id: 1, username: 'user', password: 'password' };
 
-        // Dummy user credentials for demonstration purposes
-        const dummyUser = {
-            userId: 1,
-            role: "italGeneral"
-        };
 
-        // Validate credentials (replace with actual validation logic)
-        if (username) {
-            // Create a JWT token
-            const token = jwt.sign(dummyUser, JWT_SECRET, { expiresIn: '1h' }); // Token expires in 1 hour
-
-            // Send the token as a JSON response
+        // Validate credentials (replace with real validation logic)
+        if (username === user.username && password === user.password) {
+            const token = generateToken(user);
             return res.json({ token });
         }
-
-        // If credentials are invalid, respond with an error
-        return res.status(401).json({ message: 'Invalid username or password' });
+    
+        return res.status(401).json({ message: 'Invalid credentials.' });
     }
+    
 };
 
 export default authenticationController;
