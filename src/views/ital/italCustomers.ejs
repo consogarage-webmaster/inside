@@ -14,7 +14,10 @@
         <tbody id="customer-list">
             <% customers.forEach(customer => { %>
                 <tr>
-                    <td><%= customer.firstname %> <%= customer.lastname %></td>
+                    <td><button class="js-modal-trigger button is-small is-fullwidth" data-target="mainmodal" data-customer-id="<%= customer.id %>">
+                        <%= customer.firstname %> <%= customer.lastname %>
+                                        </button>
+                    </td>
                     <td><%= customer.company %></td>
                     <td><%= customer.email %></td>
                     <td><%= customer.codeital %></td>

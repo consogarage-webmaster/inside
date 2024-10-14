@@ -1,5 +1,8 @@
 <%- include('partials/head.ejs') %>
         <section class="container">
-            Accueil
+            <h1>Accueil</h1>
+           <% if (locals.user) { %>
+            <h2><%= locals.user.name %></h2>
+           <% } %>
         </section>
 <%- include('partials/foot.ejs') %>  

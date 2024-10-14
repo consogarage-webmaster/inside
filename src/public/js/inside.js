@@ -1,4 +1,11 @@
-const customerGroups = [13,16,17,18,19,20,21,27]
+const customerGroups = [13,16,17,18,19,20,21,27];
+const loadingAnimation = ` <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
+
+    <dotlottie-player src="https://lottie.host/4cb34855-b2b5-484b-a16e-98d45e9299dc/2GtX5kqon8.json" background="transparent" speed="1" style="width: 150px; height: 150px; margin:auto;" loop autoplay></dotlottie-player>`;
+    let modalContent = document.querySelector('#mainmodal .modal-content');
+    document.addEventListener("DOMContentLoaded", function () {
+    modalContent = document.querySelector('#mainmodal .modal-content');
+    });
 document.addEventListener("DOMContentLoaded", function () {
 //     const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG&filter[id_default_group]=${customerGroups}&limit=10`;
 //     const customerTable = document.querySelector('#customer-list'); // Make sure this is a <table>
@@ -92,6 +99,56 @@ document.addEventListener("DOMContentLoaded", function () {
 //         initModalTriggers();
 //     }
 
+//    async function fetchCustomerDetails(customerId) {
+//             const customerUrl = `https://www.consogarage.com/api/customers/${customerId}?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG`;
+    
+//             try {
+//                 const response = await fetch(customerUrl);
+//                 if (!response.ok) {
+//                     throw new Error('Network response was not ok ' + response.statusText);
+//                 }
+    
+//                 const data = await response.text(); // Get response as text
+//                 const parser = new DOMParser();
+//                 const xmlDoc = parser.parseFromString(data, "application/xml");
+    
+//                 // Extract required fields
+//                 const customerInfo = xmlDoc.getElementsByTagName("customer")[0];
+//                 const firstname = customerInfo.getElementsByTagName("firstname")[0].textContent;
+//                 const lastname = customerInfo.getElementsByTagName("lastname")[0]?.textContent || '';
+//                 const company = customerInfo.getElementsByTagName("company")[0].textContent;
+//                 const id_group_default = customerInfo.getElementsByTagName("id_default_group")[0].textContent;
+//                 const email = customerInfo.getElementsByTagName("email")[0].textContent;
+//                 const codeital = customerInfo.getElementsByTagName("website")[0]?.textContent || ''; // Optional field
+//                 const date_creation = customerInfo.getElementsByTagName("date_add")[0].textContent;
+    
+//                 if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
+//                     return; // Skip this customer
+//                 }
+    
+//                 // Append a new row to the customer table
+//                 const newRow = customerTable.insertRow();
+//                 newRow.innerHTML = `
+//                     <td><button class="js-modal-trigger button is-small" data-target="mainmodal" data-customer-id="${customerId}">
+//                         Open
+//                     </button>${firstname} ${lastname}</td>
+//                     <td>${company}</td>
+//                     <td>${email}</td>
+//                     <td>${codeital}</td>
+//                     <td>${id_group_default}</td>
+//                     <td>${computer.dateFr(date_creation)}</td>
+//                 `;
+    
+//             } catch (error) {
+//                 console.error('Error fetching customer details:', error);
+//             }
+    
+//             // initModalTriggers();
+//         }
+
+        initModalTriggers();
+
+
     async function fetchCustomerOrders(customerId) {
         const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
         const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=${customerId}&orderBy=id&sortOrder=DESC`;
@@ -143,7 +200,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             // Display orders in the modal
-            const modalContent = document.querySelector('#mainmodal .modal-content');
+            
             modalContent.innerHTML = `<div class="columns">
             <h2 class="subtitle column">Orders for Customer ID: ${customerId}</h2>
             <div class="column has-text-right">Commandes : <br/>${countOrders}</div>
@@ -156,8 +213,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             <tr>
                                 <th>ID</th>
                                 <th>Link</th>
-                                <th>Total Paid</th>
-                                <th>Date Added</th>
+                                <th>Total</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,14 +222,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <tr>
                                     <td>${order.orderId}</td>
                                     <td><a href="${order.orderLink}" target="_blank">View Order</a></td>
-                                    <td>${order.totalPaid}</td>
+                                    <td class="has-text-right">${parseFloat(order.totalPaid).toFixed(2)}</td>
                                     <td>${computer.dateFr(order.dateAdded)}</td>
                                 </tr>`).join('')}
                         </tbody>
                     </table>`;
                 modalContent.innerHTML += orderTable;
             } else {
-                modalContent.innerHTML += `<p>No orders found for this customer.</p>`;
+                modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
             }
     
         } catch (error) {
@@ -198,8 +255,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const totalPaidElement = xmlDoc.getElementsByTagName("total_paid")[0];
             const dateAddedElement = xmlDoc.getElementsByTagName("date_add")[0];
     
-            const totalPaid = totalPaidElement ? totalPaidElement.textContent : 'N/A';
-            const dateAdded = dateAddedElement ? dateAddedElement.textContent : 'N/A';
+            const totalPaid = totalPaidElement ? totalPaidElement.textContent : '';
+            const dateAdded = dateAddedElement ? dateAddedElement.textContent : '';
     
             return { totalPaid, dateAdded };
     
@@ -218,6 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function closeModal($el) {
         $el.classList.remove('is-active');
+        modalContent.innerHTML = loadingAnimation;
     }
 
     function closeAllModals() {
@@ -267,18 +325,18 @@ const computer={
 }
 
 // Authentication
-document.addEventListener("DOMContentLoaded", function () {
-    const loginForm = document.querySelector('#loginForm');
+// document.addEventListener("DOMContentLoaded", function () {
+//     const loginForm = document.querySelector('#loginForm');
     
-    if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = loginForm.username.value; // Assuming your input field has the name "username"
-            const password = loginForm.password.value; // Assuming your input field has the name "password"
-            await authenticationController.submitLogin(username, password);
-        });
-    }
-});
+//     if (loginForm) {
+//         loginForm.addEventListener('submit', async (e) => {
+//             e.preventDefault();
+//             const username = loginForm.username.value; // Assuming your input field has the name "username"
+//             const password = loginForm.password.value; // Assuming your input field has the name "password"
+//             await authenticationController.submitLogin(username, password);
+//         });
+//     }
+// });
 
 const authenticationController = {
     submitLogin: async (username, password) => {

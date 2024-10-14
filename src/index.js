@@ -2,6 +2,7 @@ dotenv.config();
 
 import express from 'express';
 import dotenv from 'dotenv';
+import session from 'express-session';
 // import ejs from 'ejs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,6 +23,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 
+app.use(express.urlencoded());
+
+app.use(session({
+  secret: 'mysecretsession',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
 
 // Test de connexion à la base de données
 sequelize.authenticate()
@@ -43,6 +56,7 @@ app.get('/login', (req, res) => {
   res.render('login.ejs');
 });
 app.post('/login', authenticationController.submitLogin);
+app.get('/logout', authenticationController.logOut);
 app.get('/ital-clients', customerController.italCustomers);
 app.post('/users', async (req, res) => {
     try {

@@ -4,21 +4,27 @@ import { generateToken } from '../utils/auth.js';
 // You can move this secret key to an environment variable for better security
 const JWT_SECRET = 'your_jwt_secret_key';
 
+const userObject = {
+    name:"username",
+            permissions:{
+                italDirection:false
+            }
+}
+
 const authenticationController = {
     submitLogin: async (req, res) => {
         const { username, password } = req.body;
-        const user = { id: 1, username: 'user', password: 'password' };
-
-
-        // Validate credentials (replace with real validation logic)
-        if (username === user.username && password === user.password) {
-            const token = generateToken(user);
-            return res.json({ token });
-        }
-    
-        return res.status(401).json({ message: 'Invalid credentials.' });
+        console.log("user" + username);
+        req.session.user = userObject;
+        req.session.user.name = username;
+        req.session.user.permissions.italDirection = true;
+        res.redirect('/');
+    },
+    logOut: (req,res) =>{
+        req.session.user = null;
+        res.redirect('/');
     }
-    
 };
 
 export default authenticationController;
+

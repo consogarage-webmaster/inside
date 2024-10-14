@@ -60,19 +60,21 @@ async function fetchCustomerDetails(customerId) {
         const customerInfo = result.prestashop.customer[0];
 
         // Extract required fields
-        const firstname = customerInfo.firstname?.[0] || 'N/A';
-        const lastname = customerInfo.lastname?.[0] || 'N/A';
-        const company = customerInfo.company?.[0] || 'N/A';
-        const id_group_default = customerInfo.id_default_group?.[0] || 'N/A';
-        const email = customerInfo.email?.[0] || 'N/A';
+        const id = customerInfo.id?.[0];
+        const firstname = customerInfo.firstname?.[0] || '';
+        const lastname = customerInfo.lastname?.[0] || '';
+        const company = customerInfo.company?.[0] || '';
+        const id_group_default = customerInfo.id_default_group?.[0] || '';
+        const email = customerInfo.email?.[0] || '';
         const codeital = customerInfo.website?.[0] || ''; // Optional field
-        const date_creation = customerInfo.date_add?.[0] || 'N/A';
+        const date_creation = customerInfo.date_add?.[0] || '';
 
         if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
             return null; // Skip this customer
         }
 
         return {
+            id,
             firstname,
             lastname,
             company,
