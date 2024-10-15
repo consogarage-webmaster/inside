@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile.dev
     command: sh -c "rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules && npm run dev"
     environment:
-      DB_HOST: db
+      DB_HOST: inside-db # Update to match the new db container name
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
@@ -15,17 +15,17 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      db:
+      inside-db:
         condition: service_healthy
     volumes:
       - .:/usr/src/app
 
-  db:
+  inside-db: # Changed the service name from 'db' to 'inside-db'
     image: postgres:14
     environment:
-      POSTGRES_USER: inside
-      POSTGRES_PASSWORD: inside
-      POSTGRES_DB: inside
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - db-data:/var/lib/postgresql/data
