@@ -23,14 +23,14 @@ services:
   db:
     image: postgres:14
     environment:
-      POSTGRES_USER: inside
-      POSTGRES_PASSWORD: inside
-      POSTGRES_DB: inside
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inside -d inside"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 2s
       timeout: 5s
       retries: 5

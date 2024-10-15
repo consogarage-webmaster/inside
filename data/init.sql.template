@@ -1,0 +1,46 @@
+DO
+$do$
+BEGIN
+   -- Create role if it doesn't exist
+   IF NOT EXISTS (
+      SELECT 1
+      FROM pg_roles
+      WHERE rolname = '${DB_USER}') THEN
+      EXECUTE 'CREATE ROLE ${DB_USER} WITH LOGIN PASSWORD ''${DB_PASS}'';';
+   END IF;
+
+   -- Create database if it doesn't exist
+   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '${DB_NAME}') THEN
+      EXECUTE 'CREATE DATABASE ${DB_NAME} OWNER ${DB_USER};';
+   END IF;
+END
+$do$;
+
+-- Create 'users' table if it doesn't exist
+DO
+$do$
+BEGIN
+   IF NOT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users') THEN
+      CREATE TABLE users (
+         id SERIAL PRIMARY KEY,
+         name TEXT NOT NULL,
+         email TEXT UNIQUE NOT NULL,
+         password TEXT NOT NULL
+      );
+   END IF;
+END
+$do$;
+
+-- Create 'permissions' table if it doesn't exist
+DO
+$do$
+BEGIN
+   IF NOT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'permissions') THEN
+      CREATE TABLE permissions (
+         id SERIAL PRIMARY KEY,
+         name TEXT NOT NULL,
+         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+      );
+   END IF;
+END
+$do$;
