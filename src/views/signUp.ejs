@@ -1,0 +1,36 @@
+<%- include('partials/head.ejs') %>
+        <section class="container">
+            <h1 class="title">Créer utilisateur</h1>
+            <form id="signup" method="POST">
+                <div class="field">
+                    <label class="label" for="username">Username</label>
+                    <div class="control">
+                        <input class="input" type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="password">Password</label>
+                    <div class="control">
+                        <input class="input" type="password" id="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" type="submit">Créer l'utilisateur</button>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="subtitle">Permissions</h2>
+                    <%= JSON.stringify(locals.permissions) %>
+                    <% if (locals.permissions && permissions.length > 0) { %>
+                        
+                     <% permissions.forEach(permission => { %>
+                      <%= permission.name %>
+                     <% }) %>
+                    <% } %>
+                </div>
+            </form>
+        </section>
+<%- include('partials/foot.ejs') %>  

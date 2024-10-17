@@ -1,39 +1,39 @@
-version: "3.8"
+version: '3.8'
 
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: sh -c "rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules && npm run dev"
+    command: sh -c "npm run createTables && npm run seedTables && npm run dev"
     environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: ${DB_USER}
-      DB_PASS: ${DB_PASS}
+      DB_PASS: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules # Avoid overwriting node_modules
 
   db:
     image: postgres:14
     environment:
       POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - ./data/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 2s
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
 volumes:
   db-data:
