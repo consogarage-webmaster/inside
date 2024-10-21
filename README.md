@@ -1,6 +1,8 @@
 # inside
 ## Installation
-Commencez par installer les dépendances :
+Commencez par installer Node
+
+les dépendances :
 ```
 npm i
 ```

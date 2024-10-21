@@ -20,6 +20,8 @@ const PORT = process.env.PORT || 3000;
 import {User} from './models/associations.js';
 import { authenticateToken, generateToken } from './utils/auth.js'
 import customerController from './controllers/customerController.js';
+import italExpressController from './controllers/italExpressController.js';
+import verifySessionUser from './middlewares/verifySessionUser.js';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', './src/views');
@@ -51,7 +53,7 @@ sequelize.sync({ force: true })
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
+app.get('/', verifySessionUser, (req, res) => {
   res.render('index.ejs');
 });
 app.get('/login', (req, res) => {
@@ -62,10 +64,13 @@ app.get('/logout', authenticationController.logOut);
 app.get('/signup', userController.signUpPage);
 // Admin pages
 app.get('/utilisateurs', adminController.usersPage);
-
-
-app.get('/ital-clients', customerController.italCustomers);
 app.post('/utilisateurs', userController.createUser);
+
+
+// Ital Express pages
+app.get('/ital-clients', customerController.italCustomers);
+app.get('/devis', italExpressController.quotationsPage);
+
   
   app.get('/users', async (req, res) => {
     try {
