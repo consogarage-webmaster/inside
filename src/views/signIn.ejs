@@ -1,21 +1,18 @@
 <%- include('partials/head.ejs') %>
         <section class="container">
-            <h1 class="title">Inside : connectez-vous</h1>
-            <% if (locals.message) { %>
-             <%= message %>
-            <% } %>
-            <form id="login" method="POST">
+            <h1 class="title">Se connecter</h1>
+            <form id="signin" method="POST">
                 <div class="field">
-                    <label class="label" for="email">email</label>
+                    <label class="label" for="username">Username</label>
                     <div class="control">
-                        <input class="input" type="text" id="email" name="email" placeholder="Enter your email" required>
+                        <input class="input" type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label" for="password">Password</label>
                     <div class="control">
-                        <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <input class="input" type="password" id="password" placeholder="Enter your password" required>
                     </div>
                 </div>
 

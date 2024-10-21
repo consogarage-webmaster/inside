@@ -1,0 +1,13 @@
+@media (width > 1000px){
+    #maincontainer{
+        display:flex;
+        justify-content: space-between;
+
+    }
+    aside{
+        flex-basis:200px;
+    }
+    main{
+        flex-grow: 2;
+    }
+}

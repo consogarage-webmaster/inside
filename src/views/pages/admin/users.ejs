@@ -1,0 +1,58 @@
+<%- include('../../partials/head.ejs') %>
+        <section class="container">
+            <h1 class="title">Utilisateurs</h1>
+            <form id="signup" action="/utilisateurs" method="POST" class="columns is-fullwidth box is-multiline">
+                <h2 class="subtitle is-12 column">Créer un utilisateur</h2>
+                <div class="field column">
+                    <label class="label" for="email">email</label>
+                    <div class="control">
+                        <input class="input" type="text" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+
+                <div class="field column">
+                    <label class="label" for="password">Password</label>
+                    <div class="control">
+                        <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="field column is-2">
+                    <div class="control">
+                        <button class="button is-primary is-fullwidth" type="submit">Créer l'utilisateur</button>
+                    </div>
+                </div>
+            </form>
+           <% if (locals.users && locals.users.length > 0) { %>
+          <section class="grid is-gap-1">
+                <% users.forEach(oneUser => { %>
+                 <article class="box cell">
+                        <h3 class="subtitle"><%= oneUser.name %></h3>
+                        <p><%= oneUser.email %></p>
+                        <h4 class="subtitle">Permissions</h4>
+                        <ul>
+                                <% locals.permissions.forEach(permission => { %>
+                                 <li><%= permission.name %>
+                                        <% 
+                    // Check if oneUser has a permission with the same id as the current permission
+                    const userHasPermission = oneUser.permissions.some(userPermission => userPermission.id === permission.id);
+                    if (userHasPermission) { 
+                %>
+                <label class="checkbox is-pulled-right">
+  <input type="checkbox" checked>
+</label>
+                <% } else{ %>
+                        <label class="checkbox is-pulled-right">
+  <input type="checkbox">
+</label>
+                        <% } %>
+                                </li>
+                                <% }) %>
+                                
+                        </ul>
+                 </article>
+                <% }) %>
+          </section>
+            <% } %>
+        </section>
+<%- include('../../partials/foot.ejs') %>  

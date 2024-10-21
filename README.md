@@ -1,10 +1,33 @@
 # inside
 ## Installation
-Commencez par instaler les dépendances :
+
+1.Installer Docker
+apt install npm
+
+1. Installer Docker
+2. Installer npm
+```apt install npm```
+
+
+
+
+
+
+
+
+
+
+
+
+Commencez par installer les dépendances :
 ```
 npm i
 ```
 docker compose up --build
+
+Admin User
+web@consogarage.com
+12345678
 
 <!-- Entrer dans la console du container -->
 docker exec -it inside-db-1 bash
@@ -14,7 +37,12 @@ docker exec -it inside-db-1 bash
 npm run rm:container
 npm run compose:dev
 ```
+## Executer le seeding sur le container
+```
+docker-compose exec app npm run createTables
+docker-compose exec app npm run seedTables
 
+```
 ## start from scratch
 ```
 docker compose down -v
@@ -22,3 +50,5 @@ docker volume prune
 docker system prune -a --volumes
 npm run compose:dev
 ```
+
+

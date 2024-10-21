@@ -8,6 +8,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sequelize from './config/db.js';
 import authenticationController from './controllers/authenticationController.js';
+import userController from './controllers/userController.js';
+import adminController from './controllers/adminController.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import verifyToken from './middlewares/verifyToken.js';
@@ -15,7 +17,7 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = 'your_jwt_secret_key'; 
 const app = express();
 const PORT = process.env.PORT || 3000;
-import User from './models/user.js';
+import {User} from './models/associations.js';
 import { authenticateToken, generateToken } from './utils/auth.js'
 import customerController from './controllers/customerController.js';
 
@@ -57,17 +59,13 @@ app.get('/login', (req, res) => {
 });
 app.post('/login', authenticationController.submitLogin);
 app.get('/logout', authenticationController.logOut);
+app.get('/signup', userController.signUpPage);
+// Admin pages
+app.get('/utilisateurs', adminController.usersPage);
+
+
 app.get('/ital-clients', customerController.italCustomers);
-app.post('/users', async (req, res) => {
-    try {
-      const { firstName, lastName, email } = req.body;
-      const user = await User.create({ firstName, lastName, email });
-      res.status(201).json(user);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+app.post('/utilisateurs', userController.createUser);
   
   app.get('/users', async (req, res) => {
     try {

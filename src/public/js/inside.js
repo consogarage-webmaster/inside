@@ -2,153 +2,14 @@ const customerGroups = [13,16,17,18,19,20,21,27];
 const loadingAnimation = ` <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
 
     <dotlottie-player src="https://lottie.host/4cb34855-b2b5-484b-a16e-98d45e9299dc/2GtX5kqon8.json" background="transparent" speed="1" style="width: 150px; height: 150px; margin:auto;" loop autoplay></dotlottie-player>`;
+
+    const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
     let modalContent = document.querySelector('#mainmodal .modal-content');
     document.addEventListener("DOMContentLoaded", function () {
     modalContent = document.querySelector('#mainmodal .modal-content');
     });
 document.addEventListener("DOMContentLoaded", function () {
-//     const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG&filter[id_default_group]=${customerGroups}&limit=10`;
-//     const customerTable = document.querySelector('#customer-list'); // Make sure this is a <table>
-
-//     async function fetchCustomers() {
-//         // Sélecteur de secteur
-//         const container = document.querySelector('#sector-selector');
-//         let options = '';
-//         customerGroups.forEach((group)=>{
-//             options += `<option value="${group}">${group}</option>`;
-//         })
-//         container.innerHTML = `<div class="select">
-//     <select>
-//         <option value="all" selected>Tous</option>
-//         ${options}
-//     </select>
-// </div>`;
-//         try {
-//             const response = await fetch(apiCustomersUrl);
-//             if (!response.ok) {
-//                 throw new Error('Network response was not ok ' + response.statusText);
-//             }
-
-//             const data = await response.text(); // Get response as text
-//             const parser = new DOMParser();
-//             const xmlDoc = parser.parseFromString(data, "application/xml");
-
-//             const customers = xmlDoc.getElementsByTagName("customer");
-//             const customerArray = [];
-
-//             for (let i = 0; i < customers.length; i++) {
-//                 const id = customers[i].getAttribute("id");
-//                 const href = customers[i].getAttribute("xlink:href");
-//                 customerArray.push({ id, href });
-//             }
-
-//             // Fetch details for each customer
-//             for (const customer of customerArray) {
-//                 await fetchCustomerDetails(customer.id);
-//             }
-
-//         } catch (error) {
-//             console.error('Error fetching customers:', error);
-//         }
-//     }
-
-//     async function fetchCustomerDetails(customerId) {
-//         const customerUrl = `https://www.consogarage.com/api/customers/${customerId}?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG`;
-
-//         try {
-//             const response = await fetch(customerUrl);
-//             if (!response.ok) {
-//                 throw new Error('Network response was not ok ' + response.statusText);
-//             }
-
-//             const data = await response.text(); // Get response as text
-//             const parser = new DOMParser();
-//             const xmlDoc = parser.parseFromString(data, "application/xml");
-
-//             // Extract required fields
-//             const customerInfo = xmlDoc.getElementsByTagName("customer")[0];
-//             const firstname = customerInfo.getElementsByTagName("firstname")[0].textContent;
-//             const lastname = customerInfo.getElementsByTagName("lastname")[0]?.textContent || 'N/A';
-//             const company = customerInfo.getElementsByTagName("company")[0].textContent;
-//             const id_group_default = customerInfo.getElementsByTagName("id_default_group")[0].textContent;
-//             const email = customerInfo.getElementsByTagName("email")[0].textContent;
-//             const codeital = customerInfo.getElementsByTagName("website")[0]?.textContent || ''; // Optional field
-//             const date_creation = customerInfo.getElementsByTagName("date_add")[0].textContent;
-
-//             if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
-//                 return; // Skip this customer
-//             }
-
-//             // Append a new row to the customer table
-//             const newRow = customerTable.insertRow();
-//             newRow.innerHTML = `
-//                 <td><button class="js-modal-trigger button is-small" data-target="mainmodal" data-customer-id="${customerId}">
-//                     Open
-//                 </button>${firstname} ${lastname}</td>
-//                 <td>${company}</td>
-//                 <td>${email}</td>
-//                 <td>${codeital}</td>
-//                 <td>${id_group_default}</td>
-//                 <td>${computer.dateFr(date_creation)}</td>
-//             `;
-
-//         } catch (error) {
-//             console.error('Error fetching customer details:', error);
-//         }
-
-//         initModalTriggers();
-//     }
-
-//    async function fetchCustomerDetails(customerId) {
-//             const customerUrl = `https://www.consogarage.com/api/customers/${customerId}?ws_key=GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG`;
-    
-//             try {
-//                 const response = await fetch(customerUrl);
-//                 if (!response.ok) {
-//                     throw new Error('Network response was not ok ' + response.statusText);
-//                 }
-    
-//                 const data = await response.text(); // Get response as text
-//                 const parser = new DOMParser();
-//                 const xmlDoc = parser.parseFromString(data, "application/xml");
-    
-//                 // Extract required fields
-//                 const customerInfo = xmlDoc.getElementsByTagName("customer")[0];
-//                 const firstname = customerInfo.getElementsByTagName("firstname")[0].textContent;
-//                 const lastname = customerInfo.getElementsByTagName("lastname")[0]?.textContent || '';
-//                 const company = customerInfo.getElementsByTagName("company")[0].textContent;
-//                 const id_group_default = customerInfo.getElementsByTagName("id_default_group")[0].textContent;
-//                 const email = customerInfo.getElementsByTagName("email")[0].textContent;
-//                 const codeital = customerInfo.getElementsByTagName("website")[0]?.textContent || ''; // Optional field
-//                 const date_creation = customerInfo.getElementsByTagName("date_add")[0].textContent;
-    
-//                 if (firstname.includes("fake-user") || lastname.includes("fake-user")) {
-//                     return; // Skip this customer
-//                 }
-    
-//                 // Append a new row to the customer table
-//                 const newRow = customerTable.insertRow();
-//                 newRow.innerHTML = `
-//                     <td><button class="js-modal-trigger button is-small" data-target="mainmodal" data-customer-id="${customerId}">
-//                         Open
-//                     </button>${firstname} ${lastname}</td>
-//                     <td>${company}</td>
-//                     <td>${email}</td>
-//                     <td>${codeital}</td>
-//                     <td>${id_group_default}</td>
-//                     <td>${computer.dateFr(date_creation)}</td>
-//                 `;
-    
-//             } catch (error) {
-//                 console.error('Error fetching customer details:', error);
-//             }
-    
-//             // initModalTriggers();
-//         }
-
         initModalTriggers();
-
-
     async function fetchCustomerOrders(customerId) {
         const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
         const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=${customerId}&orderBy=id&sortOrder=DESC`;
@@ -205,10 +66,11 @@ document.addEventListener("DOMContentLoaded", function () {
             <h2 class="subtitle column">Orders for Customer ID: ${customerId}</h2>
             <div class="column has-text-right">Commandes : <br/>${countOrders}</div>
             <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
-            </div>`;
+            </div>
+            <div class="has-text-right"><button class="button has-text-success" onclick=fetchAndDownloadCSV()><i class="fas fa-file-csv"></i></button></div>`;
             if (orderArray.length > 0) {
                 const orderTable = `
-                    <table class="table is-fullwidth">
+                    <table id="customer-orders" class="table is-fullwidth">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -238,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     async function fetchOrderDetails(orderId) {
-        const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; // Replace with your actual API key
+       
         const apiUrl = `https://www.consogarage.com/api/orders/${orderId}?ws_key=${apiKey}`;
     
         try {
@@ -270,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function openModal($el, customerId) {
         $el.classList.add('is-active');
-        fetchCustomerOrders(customerId); // Fetch and display customer orders
+        fetchCustomerOrders(customerId);
     }
 
     function closeModal($el) {
@@ -425,69 +287,118 @@ function initProtectedLinks(){
         });
     });
 }
-// // Send Token with hrefs
-// document.addEventListener("DOMContentLoaded", function () {
-//     const links = document.querySelectorAll('.send-token');
-
-//     links.forEach(link => {
-//         link.addEventListener('click', (event) => {
-//             event.preventDefault(); // Prevent the default link behavior
-
-//             const url = link.getAttribute('href'); // Get the URL from the href attribute
-//             const token = localStorage.getItem('jwtToken'); // Get the JWT token from localStorage
-
-//             // Check if the token exists
-//             if (!token) {
-//                 console.error('No token found. User may not be authenticated.');
-//                 return; // Exit if no token is found
-//             }
-
-//             // Store the token in sessionStorage to use it in the next page
-//             sessionStorage.setItem('jwtToken', token);
-
-//             // Now navigate to the desired URL
-//             window.location.href = url; // Redirect to the URL
-//         });
-//     });
-// });
 
 
+function getFilteredItalCustomers(){
+    // alert('ital');
+    const selectedSector = document.querySelector('#sector-selector select').value;
+    location.href=`/ital-clients?sector=${selectedSector}`;
+}
+document.addEventListener("DOMContentLoaded", function () {
+    const filterBtn = document.querySelector('#ital-customer-filter');
+    filterBtn.addEventListener("click",getFilteredItalCustomers);
+});
 
+async function fetchAndDownloadCSV() {
+    // Get all order links
+    const orders = document.querySelectorAll("#customer-orders td a");
+    let allCsvContent = ""; // Variable to accumulate CSV content from all orders
 
+    // Define the headers for the CSV
+    const headers = [
+        'Id facture',
+        'Date facture',
+        'Date commande',
+        'Mode de paiement',
+        'Total HT',
+        'Total articles HT',
+        'Total transport HT',
+        'Ref commande',
+        'Id article',
+        'Id déclinaison',
+        'quantité',
+        'Reference',
+        'Dénomination',
+        'Prix unitaire HT'
+    ];
+    
+    // Add headers to the CSV content
+    allCsvContent += headers.join(',') + '\n';
 
-// async function apiFetch(url, options = {}) {
-//     const token = localStorage.getItem('jwtToken');
+    for (let order of orders) {
+        let orderUrl = order.href;
+        orderUrl += `?ws_key=${apiKey}&output_format=JSON`;
+        try {
+            // Fetch order details
+            const response = await fetch(orderUrl);
+            if (!response.ok) {
+                throw new Error('Network response was not ok for ' + orderUrl);
+            }
+            
+            const orderData = await response.json(); // Get the order data as JSON
+            
+            const orderInfo = orderData.order;
 
-//     const headers = {
-//         'Content-Type': 'application/json',
-//         ...options.headers,
-//     };
+            // Extract common order information
+            const invoiceNumber = orderInfo.invoice_number;
+            const invoiceDate = orderInfo.invoice_date;
+            const dateAdd = orderInfo.date_add;
+            const payment = orderInfo.payment;
+            const totalPaidTaxExcl = orderInfo.total_paid_tax_excl;
+            const totalProducts = orderInfo.total_products;
+            const totalShippingTaxExcl = orderInfo.total_shipping_tax_excl;
+            const reference = orderInfo.reference;
 
-//     if (token) {
-//         headers['Authorization'] = `Bearer ${token}`;
-//     }
+            // Iterate through each product (order row) in the order
+            orderInfo.associations.order_rows.forEach(product => {
+                const productId = product.product_id;
+                const productAttributeId = product.product_attribute_id;
+                const productQuantity = product.product_quantity;
+                const productReference = product.product_reference;
+                const productName = product.product_name;
+                const productPrice = product.product_price;
 
-//     const response = await fetch(url, {
-//         ...options,
-//         headers,
-//     });
+                // Build the CSV row for this product
+                const csvRow = [
+                    invoiceNumber,
+                    invoiceDate,
+                    dateAdd,
+                    payment,
+                    totalPaidTaxExcl,
+                    totalProducts,
+                    totalShippingTaxExcl,
+                    reference,
+                    productId,
+                    productAttributeId,
+                    productQuantity,
+                    productReference,
+                    productName,
+                    productPrice
+                ];
 
-//     // Log the response status and text for debugging
-//     console.log('Response Status:', response.status);
-//     const responseText = await response.text(); // Read response as text
-//     console.log('Response Text:', responseText); // Log the response text
+                // Add the row to the CSV content
+                allCsvContent += csvRow.join(',') + '\n';
+            });
 
-//     // Check if response is ok before parsing as JSON
-//     if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//     }
+        } catch (e) {
+            console.error('There was an error fetching the order details:', e);
+        }
+    }
 
-//     try {
-//         return JSON.parse(responseText); // Attempt to parse the response as JSON
-//     } catch (e) {
-//         throw new Error('Failed to parse JSON: ' + e.message);
-//     }
-// }
+    // Now that all CSV content is accumulated, create and download the combined file
+    if (allCsvContent) {
+        const blob = new Blob([allCsvContent], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
 
+        // Create a link element to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'all_orders.csv'); // Set download attribute to suggest file name
+        document.body.appendChild(link);
+        link.click();
 
+        // Clean up and remove the link
+        link.parentNode.removeChild(link);
+    }
+}
 
