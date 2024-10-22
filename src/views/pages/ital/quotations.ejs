@@ -29,9 +29,19 @@
                     <td><%= quotation.customer.email%></td>
                     <td><%= quotation.quotation.date_add%></td>
                     <td><%= quotation.quotation.id_roja45_quotation_status%></td>
-                    <td><%= JSON.stringify(quotation.products)%></td>
+                    <td> <% quotation.products.forEach((product)=>{%>
+                        <%= product.product_name%> x <%= product.product_quantity%> &nbsp; <%=(product.product_price_exc * product.product_quantity).toFixed(2)%> € HT<br/>
+                   <% })%>
+                        
+                        <%# JSON.stringify(quotation.products)%>
+                        </td>
                     
-                    <td></td>
+                    <td class="has-text-right"><% let total_quotation = 0;
+                        quotation.products.forEach((product)=>{
+                            total_quotation += (product.product_price_exc * product.product_quantity);
+                        });
+                        %>
+                        <%= total_quotation.toFixed(2)%> <span class="small"> € HT</span></td>
                     <td></td>
                   </tr>
                  <% }) %>

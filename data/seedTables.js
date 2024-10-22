@@ -5,10 +5,10 @@ const seedData = async () => {
   const transaction = await sequelize.transaction();
   try {
     // Truncate the tables
-    await sequelize.query('TRUNCATE TABLE permissions CASCADE', { transaction });
-    await sequelize.query('TRUNCATE TABLE users CASCADE', { transaction });
-    await sequelize.query('TRUNCATE TABLE users_permissions CASCADE', { transaction });
-    console.log('Tables truncated.');
+    // await sequelize.query('TRUNCATE TABLE permissions CASCADE', { transaction });
+    // await sequelize.query('TRUNCATE TABLE users CASCADE', { transaction });
+    // await sequelize.query('TRUNCATE TABLE users_permissions CASCADE', { transaction });
+    // console.log('Tables truncated.');
 
     // Insert new permissions
     const insertedPermissions = await Permissions.bulkCreate([
@@ -23,7 +23,7 @@ const seedData = async () => {
     // Insert new users
     const usersData = [
       { name: 'admin', email: 'web@consogarage.com', password: '$argon2id$v=19$m=65536,t=3,p=4$VdcBaM54OO/Ud/YCFhUKUA$fT4ZfzYF2/2QHtU/K9VnRWNPBjnLRTn3qzPLBEtPNCs', created_at: new Date(), updated_at: new Date() },
-      { name: 'user_2', email: 'user_2@example.com', password: 'password123', created_at: new Date(), updated_at: new Date() },
+      { name: 'scainero', email: 'scainero@consogarage.com', password: '$argon2id$v=19$m=65536,t=3,p=4$VdcBaM54OO/Ud/YCFhUKUA$fT4ZfzYF2/2QHtU/K9VnRWNPBjnLRTn3qzPLBEtPNCs', created_at: new Date(), updated_at: new Date() },
       { name: 'user_3', email: 'user_3@example.com', password: 'password123', created_at: new Date(), updated_at: new Date() },
       { name: 'user_4', email: 'user_4@example.com', password: 'password123', created_at: new Date(), updated_at: new Date() }
     ];

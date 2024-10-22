@@ -10,8 +10,8 @@ import sequelize from './config/db.js';
 import authenticationController from './controllers/authenticationController.js';
 import userController from './controllers/userController.js';
 import adminController from './controllers/adminController.js';
-import userController from './controllers/userController.js';
-import adminController from './controllers/adminController.js';
+// import userController from './controllers/userController.js';
+// import adminController from './controllers/adminController.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import verifyToken from './middlewares/verifyToken.js';
@@ -20,7 +20,7 @@ const JWT_SECRET = 'your_jwt_secret_key';
 const app = express();
 const PORT = process.env.PORT || 3000;
 import {User} from './models/associations.js';
-import {User} from './models/associations.js';
+// import {User} from './models/associations.js';
 import { authenticateToken, generateToken } from './utils/auth.js'
 import customerController from './controllers/customerController.js';
 import italExpressController from './controllers/italExpressController.js';
@@ -49,10 +49,10 @@ sequelize.authenticate()
   .catch(err => console.error('Unable to connect to the database:', err));
 
 // import verifyToken from './middlewares/verifyToken.js';
-sequelize.sync({ force: true })
-  .then(() => {
-    console.log('Database & tables created!');
-  });
+// sequelize.sync({ force: true })
+//   .then(() => {
+//     console.log('Database & tables created!');
+//   });
 
 app.use(express.json());
 

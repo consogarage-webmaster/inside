@@ -14,15 +14,6 @@ const italExpressController = {
             // Step 1: Fetch quotations list in JSON format
             const quotationsResponse = await axios.get(quotationsApiUrl);
             const quotationsData = quotationsResponse.data;
-            
-
-
-            
-
-            
-            
-
-            
             res.render('pages/ital/quotations.ejs', { quotations: quotationsData });
 
         } catch (error) {

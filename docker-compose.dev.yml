@@ -1,28 +1,23 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile.dev
     command: sh -c "npm run createTables && npm run seedTables && npm run dev"
-    command: sh -c "npm run createTables && npm run seedTables && npm run dev"
+
     environment:
       DB_HOST: inside-db # Update to match the new db container name
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASSWORD}
-      DB_PASS: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
     ports:
-      - '3000:3000'
       - '3000:3000'
     depends_on:
       inside-db:
         condition: service_healthy
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules # Avoid overwriting node_modules
       - /usr/src/app/node_modules # Avoid overwriting node_modules
 
   inside-db: # Changed the service name from 'db' to 'inside-db'
