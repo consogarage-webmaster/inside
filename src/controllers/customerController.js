@@ -6,7 +6,7 @@ const parser = new xml2js.Parser();
 
 const customerController = {
     italCustomers: async (req, res) => {
-        const customerGroups = ['1', '2', '3']; 
+        const customerGroups = ['1', '2', '3'];
         const customerGroupsNames = [
             { id: 13, name: 'Hors secteur' },
             { id: 16, name: 'Ouest' },
@@ -18,17 +18,20 @@ const customerController = {
             { id: 27, name: 'Bourgogne Franche Comté' }
         ];
         const groupIds = customerGroupsNames.map(group => group.id);
+        let groupIdsString = '';
+        if (req.query.sector) {
+            groupIdsString = req.query.sector;
+        } else {
 
-// Join group IDs into a string for the URL parameter
-const groupIdsString = groupIds.join(',');
+            groupIdsString = groupIds.join(',');
+        }
+
 
         
 const apiCustomersUrl = `https://www.consogarage.com/api/customers?ws_key=${apiKey}&filter[id_default_group]=[${groupIdsString}]&limit=100`;
-        
         try {
             const response = await axios.get(apiCustomersUrl);
             const data = response.data;
-
             const result = await parser.parseStringPromise(data);
 
             // Ensure the XML response has the expected structure

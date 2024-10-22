@@ -8,10 +8,10 @@
                 <th>Email</th>
                 <th>Code Client</th>
                 <th id="sector-selector"><div class="field">
-                    <label class="label">Select Dropdown</label>
+                    <label class="label">Secteur</label>
                     <div class="control">
                       <div class="select">
-                        <select>
+                        <select >
                           <option>Tous</option>
                           <% if (locals.allGroups && allGroups.length > 0) { %>
                            <% allGroups.forEach(group => { %>
@@ -23,6 +23,7 @@
                     </div>
                   </div></th>
                 <th>Inscription</th>
+                <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary ">OK</button></th>
             </tr>
         </thead>
         <tbody id="customer-list">
@@ -35,8 +36,8 @@
                     <td><%= customer.company %></td>
                     <td><%= customer.email %></td>
                     <td><%= customer.codeital %></td>
-                    <td><%= customer.id_group_default%> - <%= customer.name_group_default.language[0]['_']%></td>
-                    <td><%= customer.date_creation %></td>
+                    <td class="has-text-centered"><%= customer.name_group_default.language[0]['_'].replace('Ital','').replace(/\s?\(.*?\)/g, '')%></td>
+                    <td colspan="2"><%= customer.date_creation %></td>
                 </tr>
             <% }) %>
         </tbody>

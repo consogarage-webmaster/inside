@@ -1,5 +1,38 @@
 # inside
 ## Installation
+
+
+1. Installer Docker
+2. Installer Docker Compose
+```
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+```
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+3. Installer npm
+```
+apt install npm
+```
+4. Install Postgres
+```
+sudo apt install postgresql postgresql-contrib
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Commencez par installer les dépendances :
 ```
 npm i

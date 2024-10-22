@@ -1,0 +1,53 @@
+<%- include('../../partials/head.ejs') %>
+        <section class="container">
+            <h1>Devis</h1>
+           
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Nom</th>
+                    <th>Société</th>
+                    <th>email</th>
+                    <th>Date</th>
+                    <th>Statut</th>
+                    <th>Commande</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <%# JSON.stringify(locals.quotations) %>
+                <% if (locals.quotations && locals.quotations.length > 0) { %>
+                 <% quotations.forEach(quotation => { console.log(JSON.stringify(quotation))
+                    %>
+                  <tr>
+                    <td> <%= quotation.quotation.reference%></td>
+                    <td><%= quotation.customer.firstname%> <%= quotation.customer.lastname%></td>
+                    <td><%= quotation.customer.company%></td>
+                    <td><%= quotation.customer.email%></td>
+                    <td><%= quotation.quotation.date_add%></td>
+                    <td><%= quotation.quotation.id_roja45_quotation_status%></td>
+                    <td> <% quotation.products.forEach((product)=>{%>
+                        <%= product.product_name%> x <%= product.product_quantity%> &nbsp; <%=(product.product_price_exc * product.product_quantity).toFixed(2)%> € HT<br/>
+                   <% })%>
+                        
+                        <%# JSON.stringify(quotation.products)%>
+                        </td>
+                    
+                    <td class="has-text-right"><% let total_quotation = 0;
+                        quotation.products.forEach((product)=>{
+                            total_quotation += (product.product_price_exc * product.product_quantity);
+                        });
+                        %>
+                        <%= total_quotation.toFixed(2)%> <span class="small"> € HT</span></td>
+                    <td></td>
+                  </tr>
+                 <% }) %>
+                <% } %>
+
+            </tbody>
+        </table>
+        </section>
+<%- include('../../partials/foot.ejs') %>  

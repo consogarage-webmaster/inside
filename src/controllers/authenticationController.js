@@ -1,18 +1,9 @@
 import jwt from 'jsonwebtoken';
+const jwtSecret = process.env.JWT_SECRET;
 import { generateToken } from '../utils/auth.js';
 import {User, Permissions} from '../models/associations.js';
-import bcrypt from 'bcrypt'; // Assuming you are using bcrypt for password hashing
 import argon2 from 'argon2';
 
-// You can move this secret key to an environment variable for better security
-const JWT_SECRET = 'your_jwt_secret_key';
-
-const userObject = {
-    name:"username",
-            permissions:{
-                italDirection:false
-            }
-}
 
 const authenticationController = {
     
@@ -38,8 +29,10 @@ const authenticationController = {
                         id: foundUser.id,
                         name: foundUser.name,
                         email: foundUser.email,
-                        permissions: foundUser.permissions.map(p => p.name) // Assuming permissions are an array of objects with `name`
+                        permissions: foundUser.permissions.map(p => p.name)
                     };
+                    // TODO maybe also send JWTtoken 
+                    // const token = jwt.sign({ id: foundUser.id, name: user.foundUser,  permissions: foundUser.permissions.map(p => p.name)}, secretKey, { expiresIn: '1h' });
                     res.redirect('/');
                 } else {
                     // Password did not match
