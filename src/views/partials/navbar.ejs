@@ -53,6 +53,10 @@
                   Créer utilisateur
                 </a> -->
                 <% if (locals.user) { %>
+                  <div class="has-text-centered">
+                    <span class="is-size-7">Connecté en tant que</span><br/>
+                    <%= user.name %>
+                  </div>
                   <a class="button is-warning" href="/logout">
                     Log out
                   </a>

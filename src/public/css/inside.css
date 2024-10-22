@@ -1,3 +1,7 @@
+:root{
+    --redcolor : #be1e2b;
+}
+
 @media (width > 1000px){
     #maincontainer{
         display:flex;
@@ -10,4 +14,11 @@
     main{
         flex-grow: 2;
     }
+}
+
+/* Side menu */
+.menu-label{
+    color: var(--redcolor);
+    text-align:center;
+    border-top:solid 1px var(--redcolor)
 }
