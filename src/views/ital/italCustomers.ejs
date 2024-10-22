@@ -7,7 +7,21 @@
                 <th>Société</th>
                 <th>Email</th>
                 <th>Code Client</th>
-                <th id="sector-selector">Secteur</th>
+                <th id="sector-selector"><div class="field">
+                    <label class="label">Select Dropdown</label>
+                    <div class="control">
+                      <div class="select">
+                        <select>
+                          <option>Tous</option>
+                          <% if (locals.allGroups && allGroups.length > 0) { %>
+                           <% allGroups.forEach(group => { %>
+                            <option value="<%= group.id %>"><%= group.name %></option>
+                           <% }) %>
+                          <% } %>
+                        </select>
+                      </div>
+                    </div>
+                  </div></th>
                 <th>Inscription</th>
             </tr>
         </thead>
@@ -21,7 +35,7 @@
                     <td><%= customer.company %></td>
                     <td><%= customer.email %></td>
                     <td><%= customer.codeital %></td>
-                    <td><%= customer.id_group_default %></td>
+                    <td><%= customer.id_group_default%> - <%= customer.name_group_default.language[0]['_']%></td>
                     <td><%= customer.date_creation %></td>
                 </tr>
             <% }) %>

@@ -1,0 +1,18 @@
+<aside class="menu">
+  <% if (user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
+    <p class="menu-label">Admin</p>
+    <ul class="menu-list">
+      <li><a href="/utilisateurs">Utilisateurs</a></li>
+      <!-- <li><a>Customers</a></li> -->
+    </ul>
+  <% } %>
+  <% if (user && user.permissions && user.permissions.filter((permission) => permission === "superadmin" || permission === "commercial-italexpress").length > 0) { %>
+    <p class="menu-label">Ital Express</p>
+    <ul class="menu-list">
+      <li><a href="ital-clients">Clients</a></li>
+      <!-- <li><a>Customers</a></li> -->
+    </ul>
+  <% } %>
+
+  
+</aside>

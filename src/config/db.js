@@ -11,6 +11,12 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     dialect: 'postgres',
     port: process.env.DB_PORT,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000, // Increased timeout
+      idle: 10000
+    }
   }
 );
 
