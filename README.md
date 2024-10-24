@@ -44,7 +44,7 @@ web@consogarage.com
 12345678
 
 <!-- Entrer dans la console du container -->
-docker exec -it inside-db-1 bash
+docker exec -it inside-db bash
 
 ## Si besoin de reinitialiser les container
 ```

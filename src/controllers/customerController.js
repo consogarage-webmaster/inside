@@ -6,8 +6,15 @@ const parser = new xml2js.Parser();
 
 const customerController = {
     italCustomers: async (req, res) => {
-        const customerGroups = ['1', '2', '3'];
-        const customerGroupsNames = [
+        // const customerGroups = ['1', '2', '3'];
+        const permissions = res.locals.user.permissions;
+        let overSeer = permissions.includes('superadmin'||'direction-italexpress'); 
+        // if (req.user && req.user.permissions && req.user.permissions.filter(permission => permission.name === "superadmin")){
+        //     overSeer = true;
+        //     alert("Overseer : " + overSeer)
+        // };
+        console.log('overseer : ' + overSeer);
+        let customerGroupsNames = [
             { id: 13, name: 'Hors secteur' },
             { id: 16, name: 'Ouest' },
             { id: 17, name: 'Sud-Ouest' },
@@ -22,7 +29,6 @@ const customerController = {
         if (req.query.sector) {
             groupIdsString = req.query.sector;
         } else {
-
             groupIdsString = groupIds.join(',');
         }
 

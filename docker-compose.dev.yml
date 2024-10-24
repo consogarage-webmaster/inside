@@ -6,7 +6,7 @@ services:
     command: sh -c "npm run createTables && npm run seedTables && npm run dev"
 
     environment:
-      DB_HOST: inside-db # Update to match the new db container name
+      DB_HOST: db # Update to match the new db container name
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASSWORD}
@@ -14,13 +14,13 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      inside-db:
+      db:
         condition: service_healthy
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules # Avoid overwriting node_modules
 
-  inside-db: # Changed the service name from 'db' to 'inside-db'
+  db: # Changed the service name from 'db' to 'inside-db'
     image: postgres:14
     environment:
       POSTGRES_USER: ${DB_USER}

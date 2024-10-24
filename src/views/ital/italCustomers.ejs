@@ -7,7 +7,9 @@
                 <th>Société</th>
                 <th>Email</th>
                 <th>Code Client</th>
-                <th id="sector-selector"><div class="field">
+                <th id="sector-selector">
+                  <%= locals.user.permissions %>
+                  <div class="field">
                     <label class="label">Secteur</label>
                     <div class="control">
                       <div class="select">

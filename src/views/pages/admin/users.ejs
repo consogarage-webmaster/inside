@@ -24,11 +24,17 @@
                 </div>
             </form>
            <% if (locals.users && locals.users.length > 0) { %>
-          <section class="grid is-gap-1">
+          <section class="fixed-grid">
+            <div class="grid has-4-cols">
                 <% users.forEach(oneUser => { %>
                  <article class="box cell">
                         <h3 class="subtitle"><%= oneUser.name %></h3>
                         <p><%= oneUser.email %></p>
+                        
+                            <% if (oneUser.italSectors[0]) { %>
+                                <p><strong>Sector :</strong> <%= oneUser.italSectors[0].id_group %></p>
+                            <% } %>
+                           
                         <h4 class="subtitle">Permissions</h4>
                         <ul>
                                 <% locals.permissions.forEach(permission => { %>
@@ -52,6 +58,7 @@
                         </ul>
                  </article>
                 <% }) %>
+            </div>
           </section>
             <% } %>
         </section>

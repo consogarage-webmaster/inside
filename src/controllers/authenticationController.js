@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 const jwtSecret = process.env.JWT_SECRET;
-import { generateToken } from '../utils/auth.js';
+// import { generateToken } from '../utils/auth.js';
 import {User, Permissions} from '../models/associations.js';
 import argon2 from 'argon2';
 
@@ -10,12 +10,10 @@ const authenticationController = {
 
     submitLogin: async (req, res) => {
         const { email, password } = req.body;
-        // console.log('foundUser', foundUser.password)
         try {
-            // Find the user by email and include associated permissions
             const foundUser = await User.findOne({
                 where: { email },
-                include: [{ model: Permissions, as: 'permissions' }] // Assuming you have this association
+                include: [{ model: Permissions, as: 'permissions' }]
             });
     
             if (foundUser) {
@@ -24,15 +22,22 @@ const authenticationController = {
                 const passwordMatch = await argon2.verify(foundUser.password, password);
     
                 if (passwordMatch) {
-                    // Store user info in the session (including permissions)
-                    req.session.user = {
+                    const userPayload = {
                         id: foundUser.id,
                         name: foundUser.name,
                         email: foundUser.email,
                         permissions: foundUser.permissions.map(p => p.name)
                     };
-                    // TODO maybe also send JWTtoken 
-                    // const token = jwt.sign({ id: foundUser.id, name: user.foundUser,  permissions: foundUser.permissions.map(p => p.name)}, secretKey, { expiresIn: '1h' });
+                    const token = jwt.sign(userPayload, jwtSecret, { expiresIn: '1h' });
+                    req.session.user = userPayload;
+
+                    // Store JWT in a secure cookie
+                    res.cookie('jwtToken', token, {
+                        httpOnly: true,  // Prevent access to the cookie via JavaScript
+                        // secure: process.env.NODE_ENV === 'production', // Send cookie only over HTTPS in production
+                        maxAge: 3600000  // 1 hour expiry (same as the token expiry)
+                    });
+
                     res.redirect('/');
                 } else {
                     // Password did not match
@@ -49,7 +54,26 @@ const authenticationController = {
     },    
     logOut: (req,res) =>{
         req.session.user = null;
+        res.clearCookie('jwtToken'); 
         res.redirect('/');
+    },
+    controlUserConnection: (req, res, next) => {
+        const token = req.cookies.jwtToken;
+        console.log("token" + token)
+        if (!token) {
+            return res.redirect('/login');
+        }
+        try {
+            // Verify the JWT
+            const decoded = jwt.verify(token, jwtSecret);
+            req.user = decoded;
+            res.locals.user = decoded;
+            console.log(req.user);
+            next();
+        } catch (err) {
+            console.error('Invalid or expired token');
+            res.redirect('/login');
+        }
     }
 };
 

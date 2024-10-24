@@ -1,6 +1,7 @@
 // import Permissions from "../models/Permissions.js";
 // import User from "../models/User.js";
-import {User, Permissions} from '../models/associations.js'
+import {User, Permissions, UsersItalSectors} from '../models/associations.js'
+// import UsersItalSectors from '../models/UsersItalSectors.js';
 const adminController = {
     usersPage: async (req, res) => {
         try {
@@ -13,6 +14,10 @@ const adminController = {
                     {
                         model: Permissions, // The associated model
                         as: 'permissions'   // Alias defined in the association
+                    },
+                    {
+                        model: UsersItalSectors,
+                        as: 'italSectors' 
                     }
                 ]
             });

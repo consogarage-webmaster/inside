@@ -200,39 +200,39 @@ const computer={
 //     }
 // });
 
-const authenticationController = {
-    submitLogin: async (username, password) => {
-        const loginUrl = '/login'; 
+// const authenticationController = {
+//     submitLogin: async (username, password) => {
+//         const loginUrl = '/login'; 
 
-        // Prepare the request options
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password }) // Include username and password
-        };
+//         // Prepare the request options
+//         const requestOptions = {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ username, password }) // Include username and password
+//         };
 
-        try {
-            const response = await fetch(loginUrl, requestOptions);
-            if (!response.ok) {
-                throw new Error('Network response was not ok: ' + response.statusText);
-            }
+//         try {
+//             const response = await fetch(loginUrl, requestOptions);
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok: ' + response.statusText);
+//             }
 
-            const data = await response.json(); // Assuming the server responds with JSON
-            console.log('Login successful:', data);
+//             const data = await response.json(); // Assuming the server responds with JSON
+//             console.log('Login successful:', data);
 
-            // Store the token in localStorage
-            localStorage.setItem('jwtToken', data.token); 
+//             // Store the token in localStorage
+//             localStorage.setItem('jwtToken', data.token); 
 
-            // Redirect after successful login
-            // window.location.href = '/dashboard'; // Update with your desired redirect URL
-        } catch (error) {
-            console.error('Error during login:', error);
-            alert('Login failed. Please check your username and password.'); // Inform user of the error
-        }
-    }
-};
+//             // Redirect after successful login
+//             // window.location.href = '/dashboard'; // Update with your desired redirect URL
+//         } catch (error) {
+//             console.error('Error during login:', error);
+//             alert('Login failed. Please check your username and password.'); // Inform user of the error
+//         }
+//     }
+// };
 
 // document.addEventListener("DOMContentLoaded", function () {
     // Function to fetch protected page data
