@@ -34,7 +34,7 @@ const authenticationController = {
                     // Store JWT in a secure cookie
                     res.cookie('jwtToken', token, {
                         httpOnly: true,  // Prevent access to the cookie via JavaScript
-                        // secure: process.env.NODE_ENV === 'production', // Send cookie only over HTTPS in production
+                        secure: process.env.NODE_ENV === 'production', // Send cookie only over HTTPS in production
                         maxAge: 3600000  // 1 hour expiry (same as the token expiry)
                     });
 

@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // import verifyToken from './middlewares/verifyToken.js';
 import jwt from 'jsonwebtoken';
-const JWT_SECRET = 'your_jwt_secret_key'; 
+const JWT_SECRET = process.env.JWT_SECRET; 
 const app = express();
 const PORT = process.env.PORT || 3000;
 import {User} from './models/associations.js';
@@ -42,10 +42,10 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false }
 }))
-app.use((req, res, next) => {
-  res.locals.user = req.user || null;
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.user = req.user || null;
+//   next();
+// });
 
 // Test de connexion à la base de données
 sequelize.authenticate()
