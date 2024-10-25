@@ -10,95 +10,139 @@ const loadingAnimation = ` <script src="https://unpkg.com/@dotlottie/player-comp
     });
 document.addEventListener("DOMContentLoaded", function () {
         initModalTriggers();
-    async function fetchCustomerOrders(customerId) {
-        const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
-        const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]`;
-        // const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[32842]&filter[valid]=[1]&display=full&sort=[id_DESC]`;
-        let totalOrders = 0;
-        let countOrders = 0;
-        try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-    
-            const data = await response.text(); // Get response as text
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(data, "application/xml");
-    
-            // Log the parsed XML document
-            console.log(xmlDoc);
-    
-            // Since the root element is <prestashop>, start by getting that
-            const prestashop = xmlDoc.getElementsByTagName("prestashop")[0];
-    
-            if (!prestashop) {
-                throw new Error('Invalid XML structure: no prestashop element found.');
-            }
-    
-            // Now get all the orders inside the prestashop element
-            const orders = prestashop.getElementsByTagName("order");
-            const orderArray = [];
-    
-            // Iterate over the HTMLCollection of orders
-            for (let i = 0; i < orders.length; i++) {
-                const order = orders[i];
-    console.log(order);
-                // Access the attributes and child elements of each order
-                const orderId = order.getAttribute("id") || 'N/A';  // Get the ID attribute
-                const orderLink = order.getAttribute("xlink:href") || 'N/A';  // Get the xlink:href attribute
-    
-                // Fetch detailed information for this order
-                const orderDetails = await fetchOrderDetails(orderId);
-                const totalPaid = orderDetails.totalPaid || 'N/A';
-                const dateAdded = orderDetails.dateAdded || 'N/A';
-
-                totalOrders += parseFloat(totalPaid);
-                countOrders ++;
-    
-                console.log(`Order ID: ${orderId}, Link: ${orderLink}, Total Paid: ${totalPaid}, Date Added: ${dateAdded}`);
-    
-                orderArray.push({ orderId, orderLink, totalPaid, dateAdded });
-            }
-    
-            // Display orders in the modal
-            
-            modalContent.innerHTML = `<div class="columns">
-            <h2 class="subtitle column">Orders for Customer ID: ${customerId}</h2>
-            <div class="column has-text-right">Commandes : <br/>${countOrders}</div>
-            <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
-            </div>
-            <div class="has-text-right"><button class="button has-text-success" onclick=fetchAndDownloadCSV()><i class="fas fa-file-csv"></i></button></div>`;
-            if (orderArray.length > 0) {
-                const orderTable = `
-                    <table id="customer-orders" class="table is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Link</th>
-                                <th>Total</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${orderArray.map(order => `
+        async function fetchCustomerOrders(customerId) {
+            const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
+        
+            let totalOrders = 0;
+            let countOrders = 0;
+        
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+        
+                const data = await response.json();
+                console.log(data);
+        
+                const orders = data.orders;
+                if (!orders) {
+                    throw new Error('Invalid JSON structure: no orders found.');
+                }
+        
+                // Populate orderArray with order and product details
+                const orderArray = orders.map(order => {
+                    const orderId = order.id || 'N/A';
+                    const totalPaid = parseFloat(order.total_paid) || 0;
+                    const dateAdded = order.date_add || 'N/A';
+        
+                    totalOrders += totalPaid;
+                    countOrders++;
+        
+                    return {
+                        orderId,
+                        totalPaid,
+                        dateAdded,
+                        products: order.associations?.order_rows || []
+                    };
+                });
+        
+                // Display orders in the modal
+                modalContent.innerHTML = `
+                    <div class="columns">
+                        <h2 class="subtitle column">Orders for Customer ID: ${customerId}</h2>
+                        <div class="column has-text-right">Commandes : <br/>${countOrders}</div>
+                        <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
+                    </div>
+                    <div class="has-text-right">
+                        <button id="csv-dowloader" class="button has-text-success">
+                            <i class="fas fa-file-csv"></i>
+                        </button>
+                    </div>`;
+        
+                if (orderArray.length > 0) {
+                    const orderTable = `
+                        <table id="customer-orders" class="table is-fullwidth">
+                            <thead>
                                 <tr>
-                                    <td>${order.orderId}</td>
-                                    <td><a href="${order.orderLink}" target="_blank">View Order</a></td>
-                                    <td class="has-text-right">${parseFloat(order.totalPaid).toFixed(2)}</td>
-                                    <td>${computer.dateFr(order.dateAdded)}</td>
-                                </tr>`).join('')}
-                        </tbody>
-                    </table>`;
-                modalContent.innerHTML += orderTable;
-            } else {
-                modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
+                                    <th>ID</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${orderArray.map(order => `
+                                    <tr>
+                                        <td>${order.orderId}</td>
+                                        <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
+                                        <td>${computer.dateFr(order.dateAdded)}</td>
+                                    </tr>`).join('')}
+                            </tbody>
+                        </table>`;
+                    modalContent.innerHTML += orderTable;
+                } else {
+                    modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
+                }
+        
+                // Attach CSV download functionality
+                const csvDownloader = document.querySelector('#csv-dowloader');
+                csvDownloader.addEventListener('click', () => {
+                    const csvContent = generateCSVWithProducts(orderArray);
+                    downloadCSV(csvContent, `Commandes_idclient_${customerId}.csv`);
+                });
+        
+            } catch (error) {
+                console.error('Error fetching customer orders:', error);
             }
-    
-        } catch (error) {
-            console.error('Error fetching customer orders:', error);
         }
-    }
+        
+        // Function to generate CSV content, including products
+        function generateCSVWithProducts(orders) {
+            const headers = [
+                'Order ID', 'Total Paid', 'Order Date',
+                'Product ID', 'Product Attribute ID', 'Product Name',
+                'Product Quantity', 'Product Reference', 'Product Price',
+                'Unit Price (incl. tax)', 'Unit Price (excl. tax)'
+            ];
+        
+            const csvRows = [headers.join(',')];
+        
+            orders.forEach(order => {
+                order.products.forEach(product => {
+                    const row = [
+                        order.orderId,
+                        order.totalPaid.toFixed(2),
+                        order.dateAdded,
+                        product.product_id,
+                        product.product_attribute_id,
+                        product.product_name,
+                        product.product_quantity,
+                        product.product_reference,
+                        parseFloat(product.product_price).toFixed(2),
+                        parseFloat(product.unit_price_tax_incl).toFixed(2),
+                        parseFloat(product.unit_price_tax_excl).toFixed(2)
+                    ];
+                    csvRows.push(row.join(','));
+                });
+            });
+        
+            return csvRows.join('\n');
+        }
+        
+        // Function to download the CSV file
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+        
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        
     
     async function fetchOrderDetails(orderId) {
        
