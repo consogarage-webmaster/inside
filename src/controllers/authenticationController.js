@@ -27,7 +27,7 @@ const authenticationController = {
                         name: foundUser.name,
                         email: foundUser.email,
                         permissions: foundUser.permissions.map(p => p.name),
-                        sector:foundUser.italSectors[0].id_group || null
+                        sector:foundUser.italSectors[0]?.id_group || null
                     };
                     const token = jwt.sign(userPayload, jwtSecret, { expiresIn: '1h' });
                     req.session.user = userPayload;

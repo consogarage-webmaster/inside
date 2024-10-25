@@ -24,11 +24,16 @@ const customerController = {
         const groupIds = customerGroupsNames.map(group => group.id);
         let groupIdsString = '';
         // console.log(res.user);
-        if (res.locals.user.sector) {
+        console.log(req.query);
+        if (req.query.sector) {
+            groupIdsString = req.query.sector;
+        }
+        else if (res.locals.user.sector) {
             groupIdsString = res.locals.user.sector;
         } else {
             groupIdsString = groupIds.join(',');
         }
+    
 
 
         

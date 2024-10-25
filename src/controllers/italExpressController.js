@@ -6,7 +6,7 @@ import constantes from '../const/constantes.js';
 const quotationStates  =[7];
 const italExpressController = {
     quotationsPage: async (req, res) => {
-        const quotationsApiUrl = `https://www.consogarage.com/inside-2.0/api/quotations.php?customergroups=${encodeURIComponent(`[${constantes.ital_groups}]`)}&id_roj45_quotation_status=${encodeURIComponent(`[${quotationStates}]`)}`;
+        const quotationsApiUrl = `https://www.consogarage.com/consogarage-api/api/quotations.php?customergroups=${encodeURIComponent(`[${constantes.ital_groups}]`)}&id_roj45_quotation_status=${encodeURIComponent(`[${quotationStates}]`)}`;
 
         console.log(quotationsApiUrl);
 
@@ -20,6 +20,9 @@ const italExpressController = {
             console.error('Error fetching quotations or details:', error);
             res.status(500).send('Error fetching quotations data');
         }
+    },
+    propsectsPage:async (req,res) =>{
+        res.render('pages/ital/prospects.ejs')
     }
 };
 

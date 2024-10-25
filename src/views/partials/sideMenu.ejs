@@ -1,5 +1,4 @@
-<aside class="menu">
-  <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
+<aside class="menu"><% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
     <p class="menu-label">Admin</p>
     <ul class="menu-list">
       <li><a href="<%= process.env.APP_ROOT %>/utilisateurs">Utilisateurs</a></li>      <!-- <li><a>Customers</a></li> -->
@@ -10,9 +9,7 @@
     <ul class="menu-list">
       <li><a href="<%= process.env.APP_ROOT %>/ital-clients">Clients</a></li>
       <li><a href="<%= process.env.APP_ROOT %>/devis">Devis</a></li>
+      <li><a href="<%= process.env.APP_ROOT %>/prospects">Prospects</a></li>
 
     </ul>
-  <% } %>
-
-  
-</aside>
+  <% } %></aside>

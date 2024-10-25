@@ -73,6 +73,7 @@ app.post('/utilisateurs', userController.createUser);
 // Ital Express pages
 app.get('/ital-clients', authenticationController.controlUserConnection, customerController.italCustomers);
 app.get('/devis', authenticationController.controlUserConnection, italExpressController.quotationsPage);
+app.get('/prospects', authenticationController.controlUserConnection, italExpressController.propsectsPage);
 
   
   app.get('/users', async (req, res) => {

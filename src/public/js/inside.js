@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Display orders in the modal
                 modalContent.innerHTML = `
                     <div class="columns">
-                        <h2 class="subtitle column">Orders for Customer ID: ${customerId}</h2>
-                        <div class="column has-text-right">Commandes : <br/>${countOrders}</div>
+                        <h2 class="subtitle column">Id client : ${customerId}</h2>
+                        <div class="column has-text-right"><br/><strong>${countOrders}</strong> commande${countOrders >1 ?'s' : ''}</div>
                         <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
                     </div>
                     <div class="has-text-right">
@@ -446,4 +446,17 @@ async function fetchAndDownloadCSV() {
         link.parentNode.removeChild(link);
     }
 }
-
+document.addEventListener("DOMContentLoaded", function () {
+    const expands = document.querySelectorAll('.expand');
+    if (expands) {
+        expands.forEach((expand) => {
+            const button = expand.querySelector('.button');
+            if (button) {
+                button.addEventListener('click', () => {
+                    console.log('alert');
+                   button.closest('.expand').classList.toggle('expanded')// Toggle expanded class
+                });
+            }
+        });
+    }
+});
