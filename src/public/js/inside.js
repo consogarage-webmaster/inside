@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
         initModalTriggers();
     async function fetchCustomerOrders(customerId) {
         const apiKey = "GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG"; 
-        const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=${customerId}&orderBy=id&sortOrder=DESC`;
+        const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]`;
+        // const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[32842]&filter[valid]=[1]&display=full&sort=[id_DESC]`;
         let totalOrders = 0;
         let countOrders = 0;
         try {
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Iterate over the HTMLCollection of orders
             for (let i = 0; i < orders.length; i++) {
                 const order = orders[i];
-    
+    console.log(order);
                 // Access the attributes and child elements of each order
                 const orderId = order.getAttribute("id") || 'N/A';  // Get the ID attribute
                 const orderLink = order.getAttribute("xlink:href") || 'N/A';  // Get the xlink:href attribute

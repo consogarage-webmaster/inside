@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 const jwtSecret = process.env.JWT_SECRET;
 // import { generateToken } from '../utils/auth.js';
-import {User, Permissions} from '../models/associations.js';
+import {User, Permissions, UsersItalSectors} from '../models/associations.js';
 import argon2 from 'argon2';
 
 
@@ -13,7 +13,7 @@ const authenticationController = {
         try {
             const foundUser = await User.findOne({
                 where: { email },
-                include: [{ model: Permissions, as: 'permissions' }]
+                include: [{ model: Permissions, as: 'permissions' }, { model: UsersItalSectors, as: 'italSectors' }]
             });
     
             if (foundUser) {
@@ -26,7 +26,8 @@ const authenticationController = {
                         id: foundUser.id,
                         name: foundUser.name,
                         email: foundUser.email,
-                        permissions: foundUser.permissions.map(p => p.name)
+                        permissions: foundUser.permissions.map(p => p.name),
+                        sector:foundUser.italSectors[0].id_group
                     };
                     const token = jwt.sign(userPayload, jwtSecret, { expiresIn: '1h' });
                     req.session.user = userPayload;

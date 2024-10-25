@@ -9,21 +9,28 @@
                 <th>Code Client</th>
                 <th id="sector-selector">
                   <%= locals.user.permissions %>
-                  <div class="field">
-                    <label class="label">Secteur</label>
-                    <div class="control">
-                      <div class="select">
-                        <select >
-                          <option>Tous</option>
-                          <% if (locals.allGroups && allGroups.length > 0) { %>
-                           <% allGroups.forEach(group => { %>
-                            <option value="<%= group.id %>"><%= group.name %></option>
-                           <% }) %>
-                          <% } %>
-                        </select>
+                  
+                    <% if (locals.user.sector) { %>
+                      Secteur
+                    <% } else { %>
+                      <div class="field">
+                        <label class="label">Secteur</label>
+                      <div class="control">
+                        <div class="select">
+                          <select >
+                            <option>Tous</option>
+                            <% if (locals.allGroups && allGroups.length > 0) { %>
+                             <% allGroups.forEach(group => { %>
+                              <option value="<%= group.id %>"><%= group.name %></option>
+                             <% }) %>
+                            <% } %>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  </div></th>
+                    <% } %>
+                    
+                  </th>
                 <th>Inscription</th>
                 <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary ">OK</button></th>
             </tr>

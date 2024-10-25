@@ -1,7 +1,7 @@
 import axios from 'axios';
 import xml2js from 'xml2js';
 
-const apiKey = 'GHMT1WJFQELIF4HKEBZZ1UELCX9F98MG';
+const apiKey = process.env.APIKEY;
 const parser = new xml2js.Parser();
 
 const customerController = {
@@ -23,8 +23,9 @@ const customerController = {
         ];
         const groupIds = customerGroupsNames.map(group => group.id);
         let groupIdsString = '';
-        if (req.query.sector) {
-            groupIdsString = req.query.sector;
+        // console.log(res.user);
+        if (res.locals.user.sector) {
+            groupIdsString = res.locals.user.sector;
         } else {
             groupIdsString = groupIds.join(',');
         }
