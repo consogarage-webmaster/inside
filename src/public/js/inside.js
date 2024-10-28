@@ -341,7 +341,9 @@ function getFilteredItalCustomers(){
 }
 document.addEventListener("DOMContentLoaded", function () {
     const filterBtn = document.querySelector('#ital-customer-filter');
-    filterBtn.addEventListener("click",getFilteredItalCustomers);
+    if(filterBtn){
+        filterBtn.addEventListener("click",getFilteredItalCustomers);
+    }
 });
 
 async function fetchAndDownloadCSV() {
@@ -458,5 +460,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             }
         });
+    }
+});
+
+// Loader on page change
+document.addEventListener("DOMContentLoaded", function () {
+    const navitems=document.querySelectorAll('aside .menu-list a');
+    if (navitems){
+        navitems.forEach((navitem)=>{
+            navitem.addEventListener('click',()=>{
+                // alert('click');
+                const target = document.querySelector('#maincontainer main');
+                target.innerHTML = `<video loop autoplay muted style="width:150px;height:150px;margin:auto;">
+    <source src="img/loading-Inside.webm" type="video/webm">
+    Your browser does not support the video tag.
+</video>`;
+            })
+        })
     }
 });

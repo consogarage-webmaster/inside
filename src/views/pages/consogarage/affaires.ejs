@@ -1,0 +1,56 @@
+<%- include('../../partials/head.ejs') %>
+<section>
+    <h1 class="title">Affaires</h1>
+    <div class="table-container">
+        <table id="maintable" class="table is-fullwidth is-striped">
+            <thead>
+                <tr>
+                    <th> <a href="?order_by=id&amp;order=asc">
+                            <i class="fas fa-sort-up"></i>
+                        </a>
+                        <a href="?order_by=id&amp;order=desc">
+                            <i class="fas fa-sort-down"></i>
+                        </a>
+                    </th>
+                    <th>Date création</th>
+                    <th>email</th>
+                    <th>Origine</th>
+                    <th>Prenom</th>
+                    <th>Nom</th>
+                    <th>Sté</th>
+                    <th>Cpte Ital</th>
+                    <th>Devis</th>
+                    <th>Demande initiale</th>
+                    <th>Cmde.</th>
+                    <th>Expé.</th>
+                    <th></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <% if (locals.affaires && locals.affaires.length > 0) { %>
+                 <% affaires.forEach(affaire => { %>
+                  <tr>
+                    <td></td>
+                    <td><%= affaire.date_creation %></td>
+                    <td><%= affaire.customer.email %></td>
+                    <td><%= affaire.origine %></td>
+                    <td><%= affaire.customer.firsname %></td>
+                    <td><%= affaire.customer.lastname %></td>
+                    <td><%= affaire.customer.company %></td>
+                    <td><%= affaire.code_ital %></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                 <% }) %>
+                <% } else { %>
+
+                    <% } %>
+</tbody>
+        </table>
+    </div>
+</section>
+<%- include('../../partials/foot.ejs') %>  

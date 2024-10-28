@@ -8,7 +8,7 @@ const italExpressController = {
     quotationsPage: async (req, res) => {
         const quotationsApiUrl = `https://www.consogarage.com/consogarage-api/api/quotations.php?customergroups=${encodeURIComponent(`[${constantes.ital_groups}]`)}&id_roj45_quotation_status=${encodeURIComponent(`[${quotationStates}]`)}`;
 
-        console.log(quotationsApiUrl);
+        // console.log(quotationsApiUrl);
 
         try {
             // Step 1: Fetch quotations list in JSON format

@@ -1,5 +1,5 @@
 <%- include('../../partials/head.ejs') %>
-        <section class="container">
+        <section >
             <h1 class="title">Devis</h1>
            
         <table class="table is-fullwidth">
@@ -28,7 +28,7 @@
                     <td><%= quotation.customer.company%></td>
                     <td><%= quotation.customer.email%></td>
                     <td><%= quotation.quotation.quotation_date%></td>
-                    <td><%= quotation.quotation.status%></td>
+                    <td><span class="tag has-text-dark" style="background-color: <%= quotation.quotation.status_color%>;"><%= quotation.quotation.status_name%></span></td>
                     <td><div class="expand"> <button class="button is-small is-fullwidth">Voir</button><table class="table">
                         <% quotation.products.forEach((product)=>{%>
                             <tr><td>

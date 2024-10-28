@@ -1,9 +1,20 @@
-<aside class="menu"><% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
+<aside class="menu">
+  <!-- Menu ADMIN -->
+  <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
     <p class="menu-label">Admin</p>
     <ul class="menu-list">
       <li><a href="<%= process.env.APP_ROOT %>/utilisateurs">Utilisateurs</a></li>      <!-- <li><a>Customers</a></li> -->
     </ul>
   <% } %>
+    <!-- Menu CONSOGARAGE -->
+    <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin").length > 0) { %>
+      <p class="menu-label">Consogarage</p>
+      <ul class="menu-list">
+        <li><a href="<%= process.env.APP_ROOT %>/affaires">Affaires</a></li>      <!-- <li><a>Customers</a></li> -->
+      </ul>
+    <% } %>
+
+  <!-- Menu ITAL -->
   <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin" || permission === "commercial-italexpress" || permission === "direction-italexpress").length > 0 ) { %> 
     <p class="menu-label">Ital Express</p>
     <ul class="menu-list">

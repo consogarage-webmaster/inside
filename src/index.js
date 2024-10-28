@@ -11,6 +11,7 @@ import sequelize from './config/db.js';
 import authenticationController from './controllers/authenticationController.js'
 import userController from './controllers/userController.js';
 import adminController from './controllers/adminController.js';
+import consogarageController from './controllers/consogarageController.js';
 // import userController from './controllers/userController.js';
 // import adminController from './controllers/adminController.js';
 const __filename = fileURLToPath(import.meta.url);
@@ -69,12 +70,19 @@ app.get('/signup', userController.signUpPage);
 app.get('/utilisateurs',authenticationController.controlUserConnection, adminController.usersPage);
 app.post('/utilisateurs', userController.createUser);
 
+// Consogarage pages
+app.get('/affaires', authenticationController.controlUserConnection, consogarageController.affairespage);
 
 // Ital Express pages
 app.get('/ital-clients', authenticationController.controlUserConnection, customerController.italCustomers);
 app.get('/devis', authenticationController.controlUserConnection, italExpressController.quotationsPage);
 app.get('/prospects', authenticationController.controlUserConnection, italExpressController.propsectsPage);
 
+
+// Errors
+app.get('/*',authenticationController.controlUserConnection, (req,res)=>{
+  res.render('error/404.ejs');
+})
   
   app.get('/users', async (req, res) => {
     try {
@@ -87,5 +95,5 @@ app.get('/prospects', authenticationController.controlUserConnection, italExpres
   });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });

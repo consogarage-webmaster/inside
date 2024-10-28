@@ -31,7 +31,12 @@ h1.title{
     }
     main>*{
         flex-grow:0!important;
+        padding:0 20px;
+        
     }
+    /* main>.container{
+        max-width:100%;
+    } */
 }
 
 /* Side menu */
