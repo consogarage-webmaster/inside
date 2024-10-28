@@ -7,7 +7,7 @@ aside:not(:has(p)){
 }
 h1.title{
     color:var(--inside-purple);
-    padding-top: 20px;;
+    padding-top: 20px;
 }
 @media (width > 1000px){
     #maincontainer{
