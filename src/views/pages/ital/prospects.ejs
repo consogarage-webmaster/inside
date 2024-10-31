@@ -1,6 +1,25 @@
 <%- include('../../partials/head.ejs') %>
 <section class="container">
     <h1 class="title">Prospects</h1>
-   
+   <div class="notification is-info">
+    <p>Cette page liste les clients Consogarage ayant commandé des articles PL* et n'étant pas en compte chez Ital Express**.</p>
+    <p class="is-size-7">* Champ "Sélection PL" activé au niveau de l'article. | ** Champ "Client Ital" activé au niveau du client.</p>
+</div>
+<%# JSON.stringify(locals.prospects) %>
+<% if (locals.prospects && prospects.length > 0) { %>
+ <table class="table is-fullwidth">
+    <% prospects.forEach(prospect => { %>
+     <tr>
+        <td><%= prospect.id_customer %></td>
+        <td><%= prospect.firsname %></td>
+        <td><%= prospect.lastname %></td>
+        <td><%= prospect.company %></td>
+        <td><%= prospect.email %></td>
+        <td><%= prospect.postcode %></td>
+     </tr>
+    <% }) %>
+
+ </table>
+<% } %>
 </section>
 <%- include('../../partials/foot.ejs') %>  

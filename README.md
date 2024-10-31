@@ -20,19 +20,6 @@ apt install npm
 sudo apt install postgresql postgresql-contrib
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 Commencez par installer les dépendances :
 ```
 npm i

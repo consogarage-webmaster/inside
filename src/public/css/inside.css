@@ -1,6 +1,6 @@
 :root{
     --redcolor : #be1e2b;
-    --inside-purple : #4724c4;
+    --inside-purple : #502bd3;
 }
 aside:not(:has(p)){
     display:none;
@@ -50,4 +50,9 @@ h1.title{
 .expand.expanded{
     max-height:500px;
     overflow-y: scroll;
+}
+
+button.is-inside{
+    color:#000;
+    background-color: var(--inside-purple);
 }

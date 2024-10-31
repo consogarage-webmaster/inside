@@ -21,6 +21,9 @@ const customerController = {
             { id: 21, name: 'Sud Est' },
             { id: 27, name: 'Bourgogne Franche Comté' }
         ];
+
+        
+
         const groupIds = customerGroupsNames.map(group => group.id);
         let groupIdsString = '';
         // console.log(res.user);

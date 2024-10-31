@@ -1,6 +1,31 @@
 <%- include('../../partials/head.ejs') %>
+<% 
+let totalQuotes = 0; 
+let totalOrders = 0;
+
+if (locals.quotations && locals.quotations.length > 0) { 
+%>
+    <% quotations.forEach(quotation => { %>
+        <% quotation.products.forEach((product) => { %>
+            <% totalQuotes += (product.unit_price_tax_excl * product.product_quantity); %>
+            <% if (quotation.quotation.status === 7){%>
+                <% totalOrders += (product.unit_price_tax_excl * product.product_quantity); %>
+                <%}%>
+
+        <% }) %>
+    <% }) %>
+<% } %>
         <section >
-            <h1 class="title">Devis</h1>
+            <div class="columns">
+                <h1 class="title column">Devis <span class="is-size-7">Secteurs : <%= locals.sectors %> </span></h1>
+                <div class="column has-text-right">
+                   <p> Total devis : <%= formatNumber(totalQuotes) %></p>
+                   <p> Total Commandes : <%= formatNumber(totalOrders) %></p>
+                   <hr>
+
+                   <button id="filter-quotations-toggle" class="js-modal-trigger button is-inside" data-target="mainmodal" data-sector="<%= locals.user.sector%>"><i class="fas fa-filter"></i>&nbsp;Filtrer</button>
+                </div>
+            </div>
            
         <table class="table is-fullwidth">
             <thead>
@@ -20,10 +45,12 @@
 
                 <%# JSON.stringify(locals.quotations) %>
                 <% if (locals.quotations && locals.quotations.length > 0) { %>
-                 <% quotations.forEach(quotation => { console.log(JSON.stringify(quotation))
+                 <% quotations.forEach(quotation => { 
                     %>
                   <tr>
-                    <td> <%= quotation.quotation.reference%></td>
+                    <td> 
+                        <% quotation.quotation.reference%>
+                        </td>
                     <td><%= quotation.customer.firstname%> <%= quotation.customer.lastname%></td>
                     <td><%= quotation.customer.company%></td>
                     <td><%= quotation.customer.email%></td>

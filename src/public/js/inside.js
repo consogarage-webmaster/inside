@@ -10,91 +10,7 @@ const loadingAnimation = ` <script src="https://unpkg.com/@dotlottie/player-comp
     });
 document.addEventListener("DOMContentLoaded", function () {
         initModalTriggers();
-        async function fetchCustomerOrders(customerId) {
-            const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
         
-            let totalOrders = 0;
-            let countOrders = 0;
-        
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok ' + response.statusText);
-                }
-        
-                const data = await response.json();
-                console.log(data);
-        
-                const orders = data.orders;
-                if (!orders) {
-                    throw new Error('Invalid JSON structure: no orders found.');
-                }
-        
-                // Populate orderArray with order and product details
-                const orderArray = orders.map(order => {
-                    const orderId = order.id || 'N/A';
-                    const totalPaid = parseFloat(order.total_paid) || 0;
-                    const dateAdded = order.date_add || 'N/A';
-        
-                    totalOrders += totalPaid;
-                    countOrders++;
-        
-                    return {
-                        orderId,
-                        totalPaid,
-                        dateAdded,
-                        products: order.associations?.order_rows || []
-                    };
-                });
-        
-                // Display orders in the modal
-                modalContent.innerHTML = `
-                    <div class="columns">
-                        <h2 class="subtitle column">Id client : ${customerId}</h2>
-                        <div class="column has-text-right"><br/><strong>${countOrders}</strong> commande${countOrders >1 ?'s' : ''}</div>
-                        <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
-                    </div>
-                    <div class="has-text-right">
-                        <button id="csv-dowloader" class="button has-text-success">
-                            <i class="fas fa-file-csv"></i>
-                        </button>
-                    </div>`;
-        
-                if (orderArray.length > 0) {
-                    const orderTable = `
-                        <table id="customer-orders" class="table is-fullwidth">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Total</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${orderArray.map(order => `
-                                    <tr>
-                                        <td>${order.orderId}</td>
-                                        <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
-                                        <td>${computer.dateFr(order.dateAdded)}</td>
-                                    </tr>`).join('')}
-                            </tbody>
-                        </table>`;
-                    modalContent.innerHTML += orderTable;
-                } else {
-                    modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
-                }
-        
-                // Attach CSV download functionality
-                const csvDownloader = document.querySelector('#csv-dowloader');
-                csvDownloader.addEventListener('click', () => {
-                    const csvContent = generateCSVWithProducts(orderArray);
-                    downloadCSV(csvContent, `Commandes_idclient_${customerId}.csv`);
-                });
-        
-            } catch (error) {
-                console.error('Error fetching customer orders:', error);
-            }
-        }
         
         // Function to generate CSV content, including products
         function generateCSVWithProducts(orders) {
@@ -177,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function openModal($el, customerId) {
         $el.classList.add('is-active');
-        fetchCustomerOrders(customerId);
+        // fetchCustomerOrders(customerId);
     }
 
     function closeModal($el) {
@@ -219,7 +135,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // fetchCustomers();
 });
 const computer={
     dateFr :(dateString)=>{
@@ -231,89 +146,6 @@ const computer={
     }
 }
 
-// Authentication
-// document.addEventListener("DOMContentLoaded", function () {
-//     const loginForm = document.querySelector('#loginForm');
-    
-//     if (loginForm) {
-//         loginForm.addEventListener('submit', async (e) => {
-//             e.preventDefault();
-//             const username = loginForm.username.value; // Assuming your input field has the name "username"
-//             const password = loginForm.password.value; // Assuming your input field has the name "password"
-//             await authenticationController.submitLogin(username, password);
-//         });
-//     }
-// });
-
-// const authenticationController = {
-//     submitLogin: async (username, password) => {
-//         const loginUrl = '/login'; 
-
-//         // Prepare the request options
-//         const requestOptions = {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ username, password }) // Include username and password
-//         };
-
-//         try {
-//             const response = await fetch(loginUrl, requestOptions);
-//             if (!response.ok) {
-//                 throw new Error('Network response was not ok: ' + response.statusText);
-//             }
-
-//             const data = await response.json(); // Assuming the server responds with JSON
-//             console.log('Login successful:', data);
-
-//             // Store the token in localStorage
-//             localStorage.setItem('jwtToken', data.token); 
-
-//             // Redirect after successful login
-//             // window.location.href = '/dashboard'; // Update with your desired redirect URL
-//         } catch (error) {
-//             console.error('Error during login:', error);
-//             alert('Login failed. Please check your username and password.'); // Inform user of the error
-//         }
-//     }
-// };
-
-// document.addEventListener("DOMContentLoaded", function () {
-    // Function to fetch protected page data
-    function fetchProtectedPage(url) {
-        // Get the token from local storage
-        const token = localStorage.getItem('jwtToken');
-        console.log('token ' + token)
-
-        // Fetch the page data
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            } else {
-                throw new Error('Access denied');
-            }
-        })
-        .then(html => {
-            // Render the content
-            document.open();
-            document.write(html);
-            document.close();
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Access denied: Please log in');
-        });
-    }
-    initProtectedLinks()
-   
-// });
  // Add event listeners to all links that should call the fetch function
  document.addEventListener('DOMContentLoaded', () => {
     // Select all the links you want to bind the function to
@@ -448,6 +280,7 @@ async function fetchAndDownloadCSV() {
         link.parentNode.removeChild(link);
     }
 }
+// expand blocks
 document.addEventListener("DOMContentLoaded", function () {
     const expands = document.querySelectorAll('.expand');
     if (expands) {
@@ -479,3 +312,165 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 });
+
+// Open quotations filter
+document.addEventListener("DOMContentLoaded", function () {
+    const toggler = document.querySelector('#filter-quotations-toggle');
+    if (toggler) {
+        toggler.addEventListener("click", () => {
+
+            let htmlContent = '';
+            async function gethtmlContent() {
+                
+               const sector=toggler.dataset.sector;
+                const response = await fetch('../html/quoteFilters.html');
+                if (!response.ok) throw new Error('Failed to load HTML file');
+                htmlContent = await response.text();
+                modalContent.innerHTML = htmlContent;
+            }
+
+            gethtmlContent()
+                .then(() => {
+                    // Initialize the form only after the content has loaded
+                    initQuoteFilterForm();
+                })
+                .catch(error => console.error(error));
+        });
+    }
+});
+
+function initQuoteFilterForm() {
+    const form = document.querySelector('form[action="devis"]');
+    console.log('form:', form);
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let statuses = [];
+            form.querySelectorAll('input[name="status"]:checked').forEach((item) => {
+                statuses.push(item.value);
+            });
+
+            const toggler = document.querySelector('#filter-quotations-toggle');
+            const sector = toggler.dataset.sector;
+
+            // Ajoute 'sector' et 'status' aux paramètres de la requête
+            const queryString = new URLSearchParams({
+                customergroups: sector,
+                status: JSON.stringify(statuses)
+            }).toString();
+            // alert(`${form.action}?${queryString}`)
+            window.location.href = `${form.action}?${queryString}`;
+        });
+    }
+}
+
+
+// Open customer orders modal (ital)
+
+document.addEventListener("DOMContentLoaded", function () {
+    const togglers = document.querySelectorAll('.open-customer-orders-modal');
+    console.log('togglers ' + JSON.stringify(togglers));
+    if(togglers){
+        togglers.forEach((toggler)=>{
+            toggler.addEventListener("click",()=>{
+                
+                const customerId= toggler.dataset.customerid;
+                async function fetchCustomerOrders(customerId) {
+                    const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
+                
+                    let totalOrders = 0;
+                    let countOrders = 0;
+                
+                    try {
+                        const response = await fetch(apiUrl);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                
+                        const data = await response.json();
+                        console.log(data);
+                
+                        const orders = data.orders;
+                        if (!orders) {
+                            modalContent.innerHTML = '<p class="has-text-warning has-text-centered">Aucune commande</p>';
+                            return(null);
+                        }
+                
+                        // Populate orderArray with order and product details
+                        const orderArray = orders.map(order => {
+                            const orderId = order.id || 'N/A';
+                            const totalPaid = parseFloat(order.total_paid) || 0;
+                            const dateAdded = order.date_add || 'N/A';
+                
+                            totalOrders += totalPaid;
+                            countOrders++;
+                
+                            return {
+                                orderId,
+                                totalPaid,
+                                dateAdded,
+                                products: order.associations?.order_rows || []
+                            };
+                        });
+                
+                        // Display orders in the modal
+                        modalContent.innerHTML = `
+                            <div class="columns">
+                                <h2 class="subtitle column">Id client : ${customerId}</h2>
+                                <div class="column has-text-right"><br/><strong>${countOrders}</strong> commande${countOrders >1 ?'s' : ''}</div>
+                                <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
+                            </div>
+                            <div class="has-text-right">
+                                <button id="csv-dowloader" class="button has-text-success">
+                                    <i class="fas fa-file-csv"></i>
+                                </button>
+                            </div>`;
+                
+                        if (orderArray.length > 0) {
+                            const orderTable = `
+                                <table id="customer-orders" class="table is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Total</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${orderArray.map(order => `
+                                            <tr>
+                                                <td>${order.orderId}</td>
+                                                <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
+                                                <td>${computer.dateFr(order.dateAdded)}</td>
+                                            </tr>`).join('')}
+                                    </tbody>
+                                </table>`;
+                            modalContent.innerHTML += orderTable;
+                        } else {
+                            modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
+                        }
+                
+                        // Attach CSV download functionality
+                        const csvDownloader = document.querySelector('#csv-dowloader');
+                        csvDownloader.addEventListener('click', () => {
+                            const csvContent = generateCSVWithProducts(orderArray);
+                            downloadCSV(csvContent, `Commandes_idclient_${customerId}.csv`);
+                        });
+                
+                    } catch (error) {
+                        console.error('Error fetching customer orders:', error);
+                    }
+                }
+                fetchCustomerOrders(customerId);
+
+                // modalContent.innerHTML = 'test';
+            })
+        })
+    }
+})
+
+
+function getURLParameter(url, name) {
+    const urlParams = new URLSearchParams(new URL(url).search);
+    return urlParams.get(name);
+}

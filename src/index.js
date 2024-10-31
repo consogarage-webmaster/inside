@@ -53,7 +53,13 @@ sequelize.authenticate()
   .then(() => console.log('Connection has been established successfully.'))
   .catch(err => console.error('Unable to connect to the database:', err));
 
-
+// Formateur de nombres
+app.locals.formatNumber = (number) => {
+  return new Intl.NumberFormat('fr-FR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+  }).format(number);
+};
 
 
 
