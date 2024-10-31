@@ -1,6 +1,9 @@
 <%- include('../../partials/head.ejs') %>
 <section class="container">
-    <h1 class="title">Prospects</h1>
+    <h1 class="title">Prospects
+        (<%= prospects ? prospects.length : 0 %>)
+    </h1>
+    
    <div class="notification is-info">
     <p>Cette page liste les clients Consogarage ayant commandé des articles PL* et n'étant pas en compte chez Ital Express**.</p>
     <p class="is-size-7">* Champ "Sélection PL" activé au niveau de l'article. | ** Champ "Client Ital" activé au niveau du client.</p>
