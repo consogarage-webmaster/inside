@@ -19,7 +19,20 @@ let customerGroupsNames = [
 
 const italExpressController = {
     customersPage: async (req, res) => {
-        const customersApiUrl = `https://www.consogarage.com/consogarage-api/api/customers-italexpress.php`;
+        let customersApiUrl = `https://www.consogarage.com/consogarage-api/api/customers-italexpress.php?1=1`;
+        if(req.query.name){
+            customersApiUrl += `&name=${req.query.name}`
+        }
+        if(req.query.company){
+            customersApiUrl += `&company=${req.query.company}`
+        }
+        if(req.query.email){
+            customersApiUrl += `&email=${req.query.email}`
+        }
+        if(req.query.code){
+            customersApiUrl += `&code=${req.query.code}`
+        }
+        console.log(customersApiUrl);
         try {
             // Step 1: Fetch quotations list in JSON format
             const response = await axios.get(customersApiUrl);

@@ -5,10 +5,37 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Nom</th>
-                <th>Société</th>
-                <th>Email</th>
-                <th>Code Client</th>
+                <th>
+                  <div class="field">
+                    <label class="label">Nom</label>
+                    <div class="control">
+                        <input class="input" type="text" name="nom" placeholder="Filtrer">
+                    </div>
+                </div>
+                </th>
+                <th>
+                  <div class="field">
+                    <label class="label">Société</label>
+                    <div class="control">
+                        <input class="input" type="text" name="societe" placeholder="Filtrer">
+                    </div>
+                </div>
+                </th>
+                <th>
+                  <div class="field">
+                  <label class="label">email</label>
+                  <div class="control">
+                      <input class="input" type="text" name="email" placeholder="Filtrer">
+                  </div>
+              </div></th>
+                <th>
+                  <div class="field">
+                    <label class="label">Code client</label>
+                    <div class="control">
+                        <input class="input" type="text" name="codeital" placeholder="Filtrer">
+                    </div>
+                </div>
+                </th>
                 <th id="sector-selector">                  
                     <% if (locals.user.sector) { %>
                       Secteur
@@ -42,11 +69,11 @@
                         <%= customer.firstname %> <%= customer.lastname %>
                                         </button>
                     </td>
-                    <td><%= customer.company %></td>
-                    <td><%= customer.email %></td>
-                    <td><%= customer.codeital %></td>
-                    <td class="has-text-centered"><%= customer.id_default_group%></td>
-                    <td colspan="2"><%= customer.date_add %></td>
+                    <td class="is-size-7"><%= customer.company %></td>
+                    <td class="is-size-7"><%= customer.email %></td>
+                    <td class="is-size-7"><%= customer.codeital %></td>
+                    <td class="has-text-centered is-size-7"><%= customer.id_default_group%></td>
+                    <td colspan="2" class="is-size-7"><%= customer.date_add %></td>
                 </tr>
             <% }) %>
         </tbody>

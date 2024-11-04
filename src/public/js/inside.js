@@ -44,20 +44,22 @@ document.addEventListener("DOMContentLoaded", function () {
         
             return csvRows.join('\n');
         }
+       
         
         // Function to download the CSV file
-        function downloadCSV(csvContent, filename) {
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
+        // function downloadCSV(csvContent, filename) {
+        //     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        //     const link = document.createElement('a');
+        //     const url = URL.createObjectURL(blob);
         
-            link.setAttribute('href', url);
-            link.setAttribute('download', filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        //     link.setAttribute('href', url);
+        //     link.setAttribute('download', filename);
+        //     document.body.appendChild(link);
+        //     link.click();
+        //     document.body.removeChild(link);
+        // }
         
+       
         
     
     async function fetchOrderDetails(orderId) {
@@ -169,12 +171,23 @@ function initProtectedLinks(){
 function getFilteredItalCustomers(){
     // alert('ital');
     const selectedSector = document.querySelector('#sector-selector select').value;
-    location.href=`/ital-clients?sector=${selectedSector}`;
+    const searchName = document.querySelector('input[name="nom"]').value;
+    const searchCompany = document.querySelector('input[name="societe"]').value;
+    const searchEmail = document.querySelector('input[name="email"]').value;
+    const searchCodeItal = document.querySelector('input[name="codeital"]').value;
+
+    location.href=`/ital-clients?sector=${selectedSector}&name=${encodeURIComponent(searchName)}&company=${encodeURIComponent(searchCompany)}&email=${encodeURIComponent(searchEmail)}&code=${encodeURIComponent(searchCodeItal)}`;
+    
 }
 document.addEventListener("DOMContentLoaded", function () {
     const filterBtn = document.querySelector('#ital-customer-filter');
     if(filterBtn){
         filterBtn.addEventListener("click",getFilteredItalCustomers);
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                filterBtn.click();
+            }
+        });
     }
 });
 
@@ -369,105 +382,173 @@ function initQuoteFilterForm() {
 
 document.addEventListener("DOMContentLoaded", function () {
     const togglers = document.querySelectorAll('.open-customer-orders-modal');
-    console.log('togglers ' + JSON.stringify(togglers));
-    if(togglers){
-        togglers.forEach((toggler)=>{
-            toggler.addEventListener("click",()=>{
-                
-                const customerId= toggler.dataset.customerid;
-                async function fetchCustomerOrders(customerId) {
-                    const apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
-                
-                    let totalOrders = 0;
-                    let countOrders = 0;
-                
-                    try {
-                        const response = await fetch(apiUrl);
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                
-                        const data = await response.json();
-                        console.log(data);
-                
-                        const orders = data.orders;
-                        if (!orders) {
-                            modalContent.innerHTML = '<p class="has-text-warning has-text-centered">Aucune commande</p>';
-                            return(null);
-                        }
-                
-                        // Populate orderArray with order and product details
-                        const orderArray = orders.map(order => {
-                            const orderId = order.id || 'N/A';
-                            const totalPaid = parseFloat(order.total_paid) || 0;
-                            const dateAdded = order.date_add || 'N/A';
-                
-                            totalOrders += totalPaid;
-                            countOrders++;
-                
-                            return {
-                                orderId,
-                                totalPaid,
-                                dateAdded,
-                                products: order.associations?.order_rows || []
-                            };
-                        });
-                
-                        // Display orders in the modal
-                        modalContent.innerHTML = `
-                            <div class="columns">
-                                <h2 class="subtitle column">Id client : ${customerId}</h2>
-                                <div class="column has-text-right"><br/><strong>${countOrders}</strong> commande${countOrders >1 ?'s' : ''}</div>
-                                <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
-                            </div>
-                            <div class="has-text-right">
-                                <button id="csv-dowloader" class="button has-text-success">
-                                    <i class="fas fa-file-csv"></i>
-                                </button>
-                            </div>`;
-                
-                        if (orderArray.length > 0) {
-                            const orderTable = `
-                                <table id="customer-orders" class="table is-fullwidth">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Total</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${orderArray.map(order => `
-                                            <tr>
-                                                <td>${order.orderId}</td>
-                                                <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
-                                                <td>${computer.dateFr(order.dateAdded)}</td>
-                                            </tr>`).join('')}
-                                    </tbody>
-                                </table>`;
-                            modalContent.innerHTML += orderTable;
-                        } else {
-                            modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
-                        }
-                
-                        // Attach CSV download functionality
-                        const csvDownloader = document.querySelector('#csv-dowloader');
-                        csvDownloader.addEventListener('click', () => {
-                            const csvContent = generateCSVWithProducts(orderArray);
-                            downloadCSV(csvContent, `Commandes_idclient_${customerId}.csv`);
-                        });
-                
-                    } catch (error) {
-                        console.error('Error fetching customer orders:', error);
-                    }
-                }
-                fetchCustomerOrders(customerId);
+    const modalContent = document.querySelector("#mainmodal .modal-content"); // Assuming modal content has this ID
 
-                // modalContent.innerHTML = 'test';
-            })
-        })
+    togglers.forEach((toggler) => {
+        toggler.addEventListener("click", () => {
+            const customerId = toggler.dataset.customerid;
+
+            // Attach event listener to the form inside the modal
+            modalContent.addEventListener("submit", (event) => {
+                event.preventDefault();
+                
+                const fromDate = document.querySelector("#from-date").value;
+                const toDate = document.querySelector("#to-date").value;
+
+                fetchCustomerOrders(customerId, fromDate, toDate);
+            });
+
+            // Initial fetch without date filters
+            fetchCustomerOrders(customerId);
+        });
+    });
+
+    async function fetchCustomerOrders(customerId, fromDate = null, toDate = null) {
+        let apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
+        
+        // Add date filters if provided
+        if (fromDate) apiUrl += `&filter[invoice_date]=[${fromDate},${toDate}]`;
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
+
+            const data = await response.json();
+            const orders = data.orders || [];
+            let totalOrders = 0;
+            let countOrders = 0;
+
+            const orderArray = orders.map(order => {
+                const orderId = order.id || 'N/A';
+                const totalPaid = parseFloat(order.total_paid) || 0;
+                const dateAdded = order.date_add || 'N/A';
+
+                totalOrders += totalPaid;
+                countOrders++;
+
+                return {
+                    orderId,
+                    totalPaid,
+                    dateAdded,
+                    products: order.associations?.order_rows || []
+                };
+            });
+
+            // Update modal content with filtered orders
+            modalContent.innerHTML = `
+                <div class="columns">
+                    <h2 class="subtitle column">Id client : ${customerId}</h2>
+                    <div class="column is-6">
+                        <form id="date-filter-form" action="#" method="POST" class="columns is-multiline">
+                            <div class="field column is-6">
+                                <label class="label" for="from-date">Depuis:</label>
+                                <div class="control">
+                                    <input class="input" type="date" id="from-date" name="from-date" value="${fromDate || ''}" required>
+                                </div>
+                            </div>
+
+                            <div class="field column is-6">
+                                <label class="label" for="to-date">Jusqu'à :</label>
+                                <div class="control">
+                                    <input class="input" type="date" id="to-date" name="to-date" value="${toDate || ''}" required>
+                                </div>
+                            </div>
+
+                            <div class="field column is-12">
+                                <div class="control is-fullwidth">
+                                    <button class="button is-primary is-small is-fullwidth" type="submit">Chercher</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br/><strong>${countOrders}</strong> commande${countOrders > 1 ? 's' : ''}</div>
+                    <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
+                </div>
+                <div class="has-text-right">
+                    <button id="xls-dowloader" class="button has-text-success">
+                        <i class="fas fa-file-csv"></i>
+                    </button>
+                </div>`;
+
+            if (orderArray.length > 0) {
+                const orderTable = `
+                    <table id="customer-orders" class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Total</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orderArray.map(order => `
+                                <tr>
+                                    <td>${order.orderId}</td>
+                                    <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
+                                    <td>${order.dateAdded}</td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>`;
+                modalContent.innerHTML += orderTable;
+            } else {
+                modalContent.innerHTML += `<p class="has-text-centered has-text-warning">Aucune commande trouvée.</p>`;
+            }
+
+            // Attach CSV download functionality
+            // const csvDownloader = document.querySelector('#csv-dowloader');
+            // csvDownloader.addEventListener('click', () => {
+            //     const csvContent = generateCSVWithProducts(orderArray);
+            //     downloadCSV(csvContent, `Commandes_idclient_${customerId}.csv`);
+            // });
+            function generateXLSXWithProducts(orders) {
+                // Define headers
+                const headers = [
+                    'Order ID', 'Total Paid', 'Order Date',
+                    'Product ID', 'Product Attribute ID', 'Product Name',
+                    'Product Quantity', 'Product Reference', 'Product Price',
+                    'Unit Price (incl. tax)', 'Unit Price (excl. tax)'
+                ];
+                
+                // Create an array of rows with the headers and order data
+                const data = [headers];
+            
+                orders.forEach(order => {
+                    order.products.forEach(product => {
+                        const row = [
+                            order.orderId,
+                            order.totalPaid.toFixed(2),
+                            order.dateAdded,
+                            product.product_id,
+                            product.product_attribute_id,
+                            product.product_name,
+                            product.product_quantity,
+                            product.product_reference,
+                            parseFloat(product.product_price).toFixed(2),
+                            parseFloat(product.unit_price_tax_incl).toFixed(2),
+                            parseFloat(product.unit_price_tax_excl).toFixed(2)
+                        ];
+                        data.push(row);
+                    });
+                });
+            
+                // Create a new workbook and add the data to a worksheet
+                const workbook = XLSX.utils.book_new();
+                const worksheet = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+            
+                // Convert the workbook to a binary string and trigger download
+                XLSX.writeFile(workbook, "Orders_with_Products.xlsx");
+            }
+            const xlsDownloader = document.querySelector('#xls-dowloader');
+            xlsDownloader.addEventListener('click', () => {
+                generateXLSXWithProducts(orderArray);
+            });
+
+        } catch (error) {
+            console.error('Error fetching customer orders:', error);
+        }
     }
-})
+});
+
 
 
 function getURLParameter(url, name) {
