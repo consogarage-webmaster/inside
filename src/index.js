@@ -80,7 +80,7 @@ app.post('/utilisateurs', userController.createUser);
 app.get('/affaires', authenticationController.controlUserConnection, consogarageController.affairespage);
 
 // Ital Express pages
-app.get('/ital-clients', authenticationController.controlUserConnection, customerController.italCustomers);
+app.get('/ital-clients', authenticationController.controlUserConnection, italExpressController.customersPage);
 app.get('/devis', authenticationController.controlUserConnection, italExpressController.quotationsPage);
 app.get('/prospects', authenticationController.controlUserConnection, italExpressController.propsectsPage);
 
