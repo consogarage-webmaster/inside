@@ -49,20 +49,15 @@ if (locals.quotations && locals.quotations.length > 0) {
                     %>
                   <tr>
                     <td> 
-                        <% quotation.quotation.reference%>
+                        <%= quotation.quotation.reference%>
                         </td>
                     <td><%= quotation.customer.firstname%> <%= quotation.customer.lastname%></td>
                     <td><%= quotation.customer.company%></td>
                     <td><%= quotation.customer.email%></td>
                     <td><%= quotation.quotation.quotation_date%></td>
                     <td><span class="tag has-text-dark" style="background-color: <%= quotation.quotation.status_color%>;"><%= quotation.quotation.status_name%></span></td>
-                    <td><div class="expand"> <button class="button is-small is-fullwidth">Voir</button><table class="table">
-                        <% quotation.products.forEach((product)=>{%>
-                            <tr><td>
-                        <%= product.product_name%></td><td> x <%= product.product_quantity%> </td><td><%=(product.unit_price_tax_excl * product.product_quantity).toFixed(2)%></td></tr>
-                   <% })%>
-                   </table>
-                </div>
+                    <td ><button class="button is-small is-fullwidth js-modal-trigger" data-target="mainmodal" data-action="show-quote-detail" data-quoteid="<%= quotation.quotation.id %>">Voir</button>
+                       
                         <%# JSON.stringify(quotation.products)%>
                         </td>
                     

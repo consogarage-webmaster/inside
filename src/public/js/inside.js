@@ -555,3 +555,75 @@ function getURLParameter(url, name) {
     const urlParams = new URLSearchParams(new URL(url).search);
     return urlParams.get(name);
 }
+
+
+// Quotations details in the modal
+document.addEventListener("DOMContentLoaded", function () {
+    const quoteTogglers = document.querySelectorAll('button[data-action="show-quote-detail"]');
+    if (quoteTogglers){
+        quoteTogglers.forEach(toggler =>{
+            // const quoteId = toggler.dataset.quoteid;
+            // console.log
+            toggler.addEventListener('click',
+                ()=>{
+                    const quoteId = toggler.dataset.quoteid
+                    getQuoteDetails(quoteId)
+                })
+        })
+    }
+    async function getQuoteDetails(quoteId) {
+        const apiUrl = `https://www.consogarage.com/consogarage-api/api/quotations.php?id=${quoteId}`;
+        console.log(apiUrl);
+    
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('Network response was not ok ' + response.statusText);
+    
+            const data = await response.json();
+            console.log(data[0]);
+    
+            // Clear the modal content
+            modalContent.innerHTML = "";
+    
+            // Build the table as a single string
+            let tableHTML = `
+                <table class="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>PUHT</th>
+                            <th>Quantité</th>
+                            <th>Total HT</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+    
+            // Loop through products and add rows
+            data[0].products.forEach(product => {
+                const unitPriceExcl = parseFloat(product.unit_price_tax_excl) || 0; // Fallback to 0 if invalid
+                const quantity = parseInt(product.product_quantity) || 0; // Fallback to 0 if invalid
+                const totalHT = unitPriceExcl * quantity;
+    
+                tableHTML += `
+                    <tr>
+                        <td>${product.product_name}</td>
+                        <td>${unitPriceExcl.toFixed(2)}</td>
+                        <td>${quantity}</td>
+                        <td>${totalHT.toFixed(2)}</td>
+                    </tr>`;
+            });
+    
+            // Close the table
+            tableHTML += `</tbody></table>`;
+    
+            // Set the entire table HTML to modalContent at once
+            modalContent.innerHTML = tableHTML;
+    
+        } catch (e) {
+            console.error('Error fetching quotation details:', e);
+        }
+    }
+    
+    
+});
+
