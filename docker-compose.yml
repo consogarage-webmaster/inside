@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   app:
@@ -12,7 +12,7 @@ services:
       DB_PASS: inside
       DB_NAME: inside
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       db:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
       - db-data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inside -d inside"]
+      test: ['CMD-SHELL', 'pg_isready -U inside -d inside']
       interval: 2s
       timeout: 5s
       retries: 5

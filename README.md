@@ -42,8 +42,8 @@ Admin User
 web@consogarage.com
 12345678
 
-<!-- Entrer dans la console du container -->
-docker exec -it inside-db bash
+<!-- Entrer dans la console d'un container -->
+docker exec -it inside-db-1 bash
 <!-- ou -->
 docker exec -it inside-app-1 bash
 

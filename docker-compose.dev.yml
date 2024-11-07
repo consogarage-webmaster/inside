@@ -6,7 +6,7 @@ services:
     command: sh -c "npm run dev"
 
     environment:
-      DB_HOST: db # Update to match the new db container name
+      DB_HOST: db
       DB_PORT: 5432
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASSWORD}
@@ -18,9 +18,9 @@ services:
         condition: service_healthy
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules # Avoid overwriting node_modules
+      - /usr/src/app/node_modules
 
-  db: # Changed the service name from 'db' to 'inside-db'
+  db:
     image: postgres:14
     environment:
       POSTGRES_USER: ${DB_USER}
