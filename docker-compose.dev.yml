@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    command: sh -c "npm run createTables && npm run seedTables && npm run dev"
+    command: sh -c "npm run dev"
 
     environment:
       DB_HOST: db # Update to match the new db container name
@@ -33,9 +33,9 @@ services:
       - db-data:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
-      interval: 10s
+      interval: 2s
       timeout: 5s
-      retries: 10
+      retries: 5
 
 volumes:
   db-data:

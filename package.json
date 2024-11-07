@@ -9,7 +9,7 @@
     "dev": "nodemon src/index.js",
     "createTables": "node data/createTables.js",
     "seedTables": "node data/seedTables.js",
-    "rm:container": "docker rm -f inside-api inside-db",
+    "rm:container": "docker rm -f inside-app-1 inside-db-1",
     "compose:dev": "docker-compose -f docker-compose.dev.yml up --build",
     "db:populate": "cat ./data/initial_seeding.sql | docker exec -i 'inside-db' psql -U inside -d inside"
   },

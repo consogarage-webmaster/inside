@@ -15,7 +15,19 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 apt install npm
 ```
-4. Install Postgres
+4. Docker build ?
+5. Une fois les containers lancés, entrer dans la console du container 'app'
+```
+docker exec -it inside-app-1 bash
+```
+6. Créer les tables puis lancer le seeding initial
+```
+npm run createTables
+npm run seedTables
+```
+<!-- 4. 
+
+1. Install Postgres
 ```
 sudo apt install postgresql postgresql-contrib
 ```
@@ -23,7 +35,7 @@ sudo apt install postgresql postgresql-contrib
 Commencez par installer les dépendances :
 ```
 npm i
-```
+``` -->
 docker compose up --build
 
 Admin User
@@ -32,6 +44,8 @@ web@consogarage.com
 
 <!-- Entrer dans la console du container -->
 docker exec -it inside-db bash
+<!-- ou -->
+docker exec -it inside-app-1 bash
 
 ## Si besoin de reinitialiser les container
 ```

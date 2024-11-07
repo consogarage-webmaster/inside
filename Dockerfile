@@ -1,37 +1,24 @@
-# Dockerfile qui sert à lancer l'environnement
-# Node.js pour le développement de façon à ce
-# toute l'équipe utilise le même environnement
+# Use Node 22 as the base image
+FROM node:22
 
-# Depuis l'image Node de dockerhub version 20
-FROM node:20
+# Install rsync
+RUN apt-get update && apt-get install -y rsync && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update -y
-RUN apt-get install -y rsync
-RUN apt-get install -y postgresql-client
-
-WORKDIR /usr/src/cache
-
-# Recuperer le package.json et package-lock.json pour la commande 'npm install'
-COPY ./package.json ./
-COPY ./package-lock.json ./
-
-# Installer les dépendances avec npm
-RUN npm install
-
-# Definir le repertoire de travail
+# Set the working directory
 WORKDIR /usr/src/app
 
-# Copier le contenu du repertoire racine local dans le répertoire racine du container
-COPY ./ ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Copier les modules Node.js du répertoire de cache au répertoire de l'application
-RUN rsync -arv /usr/src/cache/node_modules/. /usr/src/app/node_modules
+# Install dependencies, including nodemon for development
+RUN npm install
+RUN npm install -g nodemon
 
-# Exécutez la commande de réinitialisation de la base de données, si nécessaire
-# RUN npm run db:resetR
+# Copy the rest of the application code
+COPY . .
 
-# Exposer le port pour pouvoir accéder au container depuis l'explorateur
+# Expose the application port
 EXPOSE 3000
 
-# Commande à effectuer pour initialiser le container (Ici : 'npm run dev')
-CMD [ "npm", "run", "start" ]
+# Command to run your app
+CMD ["npm", "start"]
