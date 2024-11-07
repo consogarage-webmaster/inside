@@ -82,7 +82,8 @@ const italExpressController = {
         try{
             const response = await axios.get(prospectsApiUrl);
             const data = response.data; 
-            res.render('pages/ital/prospects.ejs',{prospects : data});
+            const zipCodes = constantes.italSectorsZipCodes.find(sector => sector.idSector === 1).zipCodes;
+            res.render('pages/ital/prospects.ejs',{prospects : data, zipCodes : zipCodes});
         } catch (error) {
             console.error('Error fetching prospects :', error);
             res.status(500).send('Error fetching prospects data');

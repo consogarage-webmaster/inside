@@ -11,7 +11,20 @@
 <%# JSON.stringify(locals.prospects) %>
 <% if (locals.prospects && prospects.length > 0) { %>
  <table class="table is-fullwidth">
-    <% prospects.forEach(prospect => { %>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Prenom</th>
+            <th>Nom</th>
+            <th>Société</th>
+            <th>email</th>
+            <th>Code postal</th>
+        </tr>
+    </thead>
+    <% const filteredProspects = prospects.filter(prospect => 
+    zipCodes.includes(prospect.postcode.substring(0, 2))
+  );
+  filteredProspects.forEach(prospect => { %>
      <tr>
         <td><%= prospect.id_customer %></td>
         <td><%= prospect.firsname %></td>

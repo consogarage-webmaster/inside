@@ -58,6 +58,7 @@
                     <% } %>
                     
                   </th>
+                  <th>Département</th>
                 <th>Inscription</th>
                 <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary ">OK</button></th>
             </tr>
@@ -73,6 +74,7 @@
                     <td class="is-size-7"><%= customer.email %></td>
                     <td class="is-size-7"><%= customer.codeital %></td>
                     <td class="has-text-centered is-size-7"><%= customer.id_default_group%></td>
+                    <td><%= customer.departement%></td>
                     <td colspan="2" class="is-size-7"><%= customer.date_add %></td>
                 </tr>
             <% }) %>
