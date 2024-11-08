@@ -16,7 +16,7 @@ pids/
 *.pid.lock
 
 # Environment variables
-.env
+# .env
 
 # Docker files
 docker-compose.override.yml
