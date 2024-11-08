@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import { User, Permissions } from "../models/associations.js";
 import argon2 from 'argon2'; // Import argon2 for password hashing
 
@@ -42,6 +43,24 @@ const userController = {
                 return res.status(400).json({ error: 'Email already exists' });
             }
 
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+    deleteUser: async (req, res) => {
+        const userId = req.params["id"];
+        try {
+            const result = await User.destroy({
+                where: { id: userId }
+            });
+    
+            if (result === 0) {
+                // No user found with the given ID
+                res.status(404).json({ error: 'User not found' });
+            } else {
+                res.status(200).json({ message: 'User deleted successfully' });
+            }
+        } catch (e) {
+            console.error('Error deleting user:', e);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }

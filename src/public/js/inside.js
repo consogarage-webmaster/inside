@@ -627,3 +627,32 @@ document.addEventListener("DOMContentLoaded", function () {
     
 });
 
+
+function deleteUser(userId) {
+    fetch(`/utilisateurs/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            alert(`User ${userId} deleted successfully.`);
+            const userCard = document.querySelector(`#user${userId}`);
+
+            userCard.style.animation = "zoomOut 0.5s forwards";
+
+    // Wait for the animation to complete, then remove the element
+    userCard.addEventListener("animationend", () => {
+        userCard.remove();
+    });
+            // userCard.remove();
+        } else {
+            console.error('Failed to delete user:', response.status);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+

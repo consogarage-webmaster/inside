@@ -27,8 +27,12 @@
           <section class="fixed-grid has-4-cols">
             <div class="grid ">
                 <% users.forEach(oneUser => { %>
-                 <article class="box cell">
+                 <article id="user<%=oneUser.id%>" class="box cell">
                         <h3 class="subtitle"><%= oneUser.name %></h3>
+                        <form onsubmit="event.preventDefault(); deleteUser(<%= oneUser.id %>);">
+                            
+                            <button type="submit" class="button is-danger is-small is-pulled-right"><i class="fa fa-delete"></i>Del</button>
+                        </form>
                         <p><%= oneUser.email %></p>
                         
                             <% if (oneUser.italSectors[0]) { %>

@@ -75,6 +75,7 @@ app.get('/signup', userController.signUpPage);
 // Admin pages
 app.get('/utilisateurs',authenticationController.controlUserConnection, adminController.usersPage);
 app.post('/utilisateurs', userController.createUser);
+app.delete('/utilisateurs/:id', userController.deleteUser);
 
 // Consogarage pages
 app.get('/affaires', authenticationController.controlUserConnection, consogarageController.affairespage);
