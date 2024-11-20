@@ -1,10 +1,9 @@
-import sequelize from '../src/config/db.js';  // Import the Sequelize instance
-import { User, Permissions, UsersPermissions, Leads, LeadsTimeline, LeadsQuotations } from '../src/models/associations.js';  // Import the models
+import sequelize from '../src/config/db.js'; 
+import { User, Permissions, UsersPermissions, Leads, LeadsTimeline, LeadsQuotations } from '../src/models/associations.js'; 
 
 (async () => {
   try {
-    // Synchronize all models with the database
-    await sequelize.sync({ force: false });  // Set to `true` to drop existing tables and recreate them
+    await sequelize.sync({ force: false });
     console.log('Tables created successfully!');
     process.exit(0);
   } catch (error) {

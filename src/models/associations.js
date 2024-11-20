@@ -6,7 +6,6 @@ import LeadsTimeline from './LeadsTimeline.js';
 import LeadsQuotations from './LeadsQuotations.js';
 import UsersItalSectors from './UsersItalSectors.js';
 
-// Users and Permissions association (Many-to-Many)
 User.belongsToMany(Permissions, {
   through: UsersPermissions,
   as:"permissions",
@@ -20,11 +19,9 @@ Permissions.belongsToMany(User, {
   otherKey: 'id_user'
 });
 
-// User -> Ital Sectors
 User.hasMany(UsersItalSectors, { foreignKey: 'id_user', as: 'italSectors' });
 UsersItalSectors.belongsTo(User, { foreignKey: 'id_user' });
 
-// Lead has many LeadQuotations (One-to-Many)
 Leads.hasMany(LeadsQuotations, {
   foreignKey: 'id_lead',
   sourceKey: 'id'
@@ -46,7 +43,6 @@ LeadsTimeline.belongsTo(Leads, {
   targetKey: 'id'
 });
 
-// Export the associations
 export {
   User,
   Permissions,

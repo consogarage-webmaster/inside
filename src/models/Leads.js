@@ -43,8 +43,8 @@ const Lead = sequelize.define('Lead', {
 }, {
   tableName: 'leads',
   timestamps: true,
-  createdAt: 'date_creation',  // Maps to date_creation in DB
-  updatedAt: 'date_update'     // Maps to date_update in DB
+  createdAt: 'date_creation',
+  updatedAt: 'date_update'     
 });
 
 export default Lead;
