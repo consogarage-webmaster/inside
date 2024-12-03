@@ -1,69 +1,39 @@
-# inside
-## Installation
+# Procédure de Déploiement - Inside
+Ce guide décrit les étapes nécessaires pour déployer le projet Inside, en utilisant **Docker** et **docker-compose** pour orchestrer l'application et sa base de données PostgreSQL.
+## Prérequis
+Avant de commencer, assurez-vous d’avoir :
 
+- Docker installé (version 20.x ou supérieure).
+- Docker Compose installé (version 3.8 ou supérieure).
+## Étapes de Déploiement
+### Cloner le dépôt
+Clonez le dépôt du projet depuis Github :
+```
+git clone git@github.com:consogarage-webmaster/inside.git
+cd inside
+```
+### Créez votre fichier .env configuré avec les variables suivantes :
+```
+DB_HOST=db
+DB_PORT=5432
+DB_USER=XXXX
+DB_PASSWORD=XXXX
+DB_NAME=XXXX
 
-1. Installer Docker
-2. Installer Docker Compose
+APIKEY=XXXX
+JWT_SECRET=XXXX
 ```
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+### Lancez les conteneurs
+Utilisez Docker Compose pour construire les images et lancer les services :
 ```
+docker-compose up --build -d
 ```
-sudo chmod +x /usr/local/bin/docker-compose
-```
+- `--build` : Recrée les images Docker si nécessaire.
+- `-d` : Exécute les conteneurs en arrière-plan.
 
-3. Installer npm
-```
-apt install npm
-```
-4. Docker build ?
-5. Une fois les containers lancés, entrer dans la console du container 'app'
-```
-docker exec -it inside-app-1 bash
-```
-6. Créer les tables puis lancer le seeding initial
-```
-npm run createTables
-npm run seedTables
-```
-<!-- 4. 
-
-1. Install Postgres
-```
-sudo apt install postgresql postgresql-contrib
-```
-
-Commencez par installer les dépendances :
-```
-npm i
-``` -->
-docker compose up --build
-
-Admin User
-web@consogarage.com
-12345678
-
-<!-- Entrer dans la console d'un container -->
-docker exec -it inside-db-1 bash
-<!-- ou -->
-docker exec -it inside-app-1 bash
-
-## Si besoin de reinitialiser les container
-```
-npm run rm:container
-npm run compose:dev
-```
-## Executer le seeding sur le container
-```
-docker-compose exec app npm run createTables
-docker-compose exec app npm run seedTables
+### Accédez à l'application
+Ouvrez votre navigateur et accédez à l’application via l’adresse suivante :
 
 ```
-## start from scratch
+http://localhost:3000
 ```
-docker compose down -v
-docker volume prune
-docker system prune -a --volumes
-npm run compose:dev
-```
-
-

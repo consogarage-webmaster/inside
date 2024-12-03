@@ -31,12 +31,13 @@ if (locals.quotations && locals.quotations.length > 0) {
             <thead>
                 <tr>
                     <th>Ref</th>
-                    <th>Nom</th>
-                    <th>Société</th>
-                    <th>email</th>
                     <th>Date</th>
+                    <th>Société</th>
+                    <th>N° Ital Express</th>
+                    <th>Dept.</th>
+                    <th>Secteur</th>
+                    <th>email</th>
                     <th>Statut</th>
-                    <th>Détail</th>
                     <th>Total</th>
                     <th></th>
                 </tr>
@@ -49,18 +50,16 @@ if (locals.quotations && locals.quotations.length > 0) {
                     %>
                   <tr>
                     <td> 
-                        <%= quotation.quotation.reference%>
+                        <button class="button is-small is-fullwidth js-modal-trigger" data-target="mainmodal" data-action="show-quote-detail" data-quoteid="<%= quotation.quotation.id %>"><%= quotation.quotation.reference%></button>
                         </td>
-                    <td><%= quotation.customer.firstname%> <%= quotation.customer.lastname%></td>
+                        <td><%= quotation.quotation.quotation_date%></td>
+                        <%- console.log(quotation) %>
                     <td><%= quotation.customer.company%></td>
+                    <td><%= quotation.customer.codeital%></td>
+                    <td><%= quotation.customer.departement%></td>
+                    <td>Sec</td>
                     <td><%= quotation.customer.email%></td>
-                    <td><%= quotation.quotation.quotation_date%></td>
-                    <td><span class="tag has-text-dark" style="background-color: <%= quotation.quotation.status_color %>;"><%= quotation.quotation.status_name%></span></td>
-                    <td><button class="button is-small is-fullwidth js-modal-trigger" data-target="mainmodal" data-action="show-quote-detail" data-quoteid="<%= quotation.quotation.id %>">Voir</button>
-                       
-                        <%# JSON.stringify(quotation.products)%>
-                        </td>
-                    
+                    <td><span class="tag has-text-dark" style="background-color: <%= quotation.quotation.status_color %>;"><%= quotation.quotation.status_name%></span></td>                    
                     <td class="has-text-right"><% let total_quotation = 0;
                         quotation.products.forEach((product)=>{
                             total_quotation += (product.unit_price_tax_excl * product.product_quantity);
