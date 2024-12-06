@@ -1,5 +1,15 @@
-import sequelize from '../src/config/db.js'; 
-import { User, Permissions, UsersPermissions, Leads, LeadsTimeline, LeadsQuotations } from '../src/models/associations.js'; 
+import sequelize from '../src/config/db.js';
+import {
+  User,
+  Permissions,
+  UsersPermissions,
+  Leads,
+  LeadsTimeline,
+  LeadsQuotations,
+  Sector,
+  Zipcode,
+  UsersSectors,
+} from '../src/models/associations.js';
 
 (async () => {
   try {

@@ -105,6 +105,12 @@ app.get(
   authenticationController.controlUserConnection,
   italExpressController.propsectsPage
 );
+// Controle des secteurs Ital
+app.get(
+  '/sectors',
+  authenticationController.controlUserConnection,
+  italExpressController.sectors
+);
 
 // Errors
 app.get('/*', authenticationController.controlUserConnection, (req, res) => {

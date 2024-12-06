@@ -5,6 +5,8 @@ dayjs.locale('fr');
 
 const apiKey = process.env.APIKEY; // Ensure API Key is set in environment variables
 import constantes from '../const/constantes.js';
+import Sector from '../models/Sector.js';
+import Zipcode from '../models/Zipcode.js';
 // const quotationStates  =[1,2,3,4,5,6,7,13,15];
 let customerGroupsNames = [
   { id: 13, name: 'Hors secteur' },
@@ -39,11 +41,39 @@ const italExpressController = {
       const data = response.data;
 
       // Format the date for each customer
-      const formattedData = data.map(customer => ({
-        ...customer,
-        date_add: dayjs(customer.date_add).format('DD/MM/YYYY'),
-      }));
+      const formattedData = await Promise.all(
+        data.map(async customer => {
+          if (!customer.departement || isNaN(customer.departement)) {
+            return {
+              ...customer,
+              date_add: dayjs(customer.date_add).isValid()
+                ? dayjs(customer.date_add).format('DD/MM/YYYY')
+                : null,
+              sector: 'Unknown', // Default value
+            };
+          }
 
+          const sector = await Sector.findOne({
+            include: {
+              model: Zipcode,
+              as: 'zipcodes',
+              where: { zipcode: customer.departement },
+            },
+          });
+
+          return {
+            ...customer,
+            date_add: dayjs(customer.date_add).isValid()
+              ? dayjs(customer.date_add).format('DD/MM/YYYY')
+              : null,
+            sector: sector ? sector.name : 'Unknown', // Replace 'name' with the actual column
+          };
+        })
+      );
+
+      // const dataWithSectors = data.map(customer => {
+      //   customer.sector = "mysector"
+      // });
       res.render('pages/ital/customers.ejs', {
         customers: formattedData,
         allGroups: customerGroupsNames,
@@ -113,6 +143,22 @@ const italExpressController = {
     } catch (error) {
       console.error('Error fetching prospects :', error);
       res.status(500).send('Error fetching prospects data');
+    }
+  },
+  sectors: async (req, res) => {
+    try {
+      const allSectors = await Sector.findAll({
+        include: {
+          model: Zipcode,
+          as: 'zipcodes',
+        },
+      });
+      res.send(allSectors);
+    } catch (error) {
+      console.error('Error fetching sectors:', error);
+      res
+        .status(500)
+        .send({ error: 'An error occurred while fetching sectors.' });
     }
   },
 };

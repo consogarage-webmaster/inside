@@ -620,6 +620,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // console.log
       toggler.addEventListener('click', () => {
         const quoteId = toggler.dataset.quoteid;
+        getQuoteDetails(quoteId);
       });
     });
   }
