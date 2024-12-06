@@ -5,6 +5,46 @@
     <table class="table">
         <thead>
             <tr>
+              <th>
+                <div class="field">
+                  <label class="label">Société</label>
+                  <div class="control">
+                      <input class="input" type="text" name="societe" placeholder="Filtrer">
+                  </div>
+              </div>
+              </th>
+              <th>
+                <div class="field">
+                  <label class="label">Code client</label>
+                  <div class="control">
+                      <input class="input" type="text" name="codeital" placeholder="Filtrer">
+                  </div>
+              </div>
+              </th>
+              <th>Département</th>
+              <th>Secteur 2025</th>
+              <th id="sector-selector">                  
+                <% if (locals.user.sector) { %>
+                  Secteur
+                <% } else { %>
+                  <div class="field">
+                    <label class="label">Secteur</label>
+                  <div class="control">
+                    <div class="select">
+                      <select >
+                        <option>Tous</option>
+                        <% if (locals.allGroups && allGroups.length > 0) { %>
+                         <% allGroups.forEach(group => { %>
+                          <option value="<%= group.id %>"><%= group.name %></option>
+                         <% }) %>
+                        <% } %>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <% } %>
+                
+              </th>
                 <th>
                   <div class="field">
                     <label class="label">Nom</label>
@@ -13,14 +53,7 @@
                     </div>
                 </div>
                 </th>
-                <th>
-                  <div class="field">
-                    <label class="label">Société</label>
-                    <div class="control">
-                        <input class="input" type="text" name="societe" placeholder="Filtrer">
-                    </div>
-                </div>
-                </th>
+               
                 <th>
                   <div class="field">
                   <label class="label">email</label>
@@ -28,37 +61,8 @@
                       <input class="input" type="text" name="email" placeholder="Filtrer">
                   </div>
               </div></th>
-                <th>
-                  <div class="field">
-                    <label class="label">Code client</label>
-                    <div class="control">
-                        <input class="input" type="text" name="codeital" placeholder="Filtrer">
-                    </div>
-                </div>
-                </th>
-                <th id="sector-selector">                  
-                    <% if (locals.user.sector) { %>
-                      Secteur
-                    <% } else { %>
-                      <div class="field">
-                        <label class="label">Secteur</label>
-                      <div class="control">
-                        <div class="select">
-                          <select >
-                            <option>Tous</option>
-                            <% if (locals.allGroups && allGroups.length > 0) { %>
-                             <% allGroups.forEach(group => { %>
-                              <option value="<%= group.id %>"><%= group.name %></option>
-                             <% }) %>
-                            <% } %>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                    <% } %>
-                    
-                  </th>
-                  <th>Département</th>
+                <th>CA<br/><span class="is-size-7">Cette année</span></th>
+                
                 <th>Inscription</th>
                 <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary ">OK</button></th>
             </tr>
@@ -67,14 +71,16 @@
             <% customers.forEach(customer => { %>
                 <tr>
                     <td><button class="js-modal-trigger open-customer-orders-modal button is-small is-fullwidth" data-target="mainmodal" data-customerid="<%= customer.id %>">
-                        <%= customer.firstname %> <%= customer.lastname %>
+                      <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :'Aucune société' %>
                                         </button>
                     </td>
-                    <td class="is-size-7"><%= customer.company %></td>
-                    <td class="is-size-7"><%= customer.email %></td>
                     <td class="is-size-7"><%= customer.codeital %></td>
-                    <td class="has-text-centered is-size-7"><%= customer.id_default_group%></td>
                     <td><%= customer.departement%></td>
+                    <td class="has-text-centered is-size-7">Secteur 2025</td>
+                    <td class="has-text-centered is-size-7"><%= customer.id_default_group%></td>
+                    <td class="is-size-7"><%= customer.firstname %> <%= customer.lastname %></td>
+                    <td class="is-size-7"><%= customer.email %></td>
+                    <td class="has-text-right"><%= parseFloat(customer.year_revenue).toFixed(2) %></td>
                     <td colspan="2" class="is-size-7"><%= customer.date_add %></td>
                 </tr>
             <% }) %>
