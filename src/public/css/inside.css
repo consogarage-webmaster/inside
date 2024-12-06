@@ -67,3 +67,11 @@ button.is-inside{
         opacity: 0;
     }
 }
+
+#tab-content > div {
+    display: none;
+  }
+  
+  #tab-content > div.is-active {
+    display: block;
+  }

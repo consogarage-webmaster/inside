@@ -1,41 +1,102 @@
 <%- include('../../partials/head.ejs') %>
+<% const filteredProspects = prospects.filter(prospect => 
+zipCodes.includes(prospect.postcode.substring(0, 2))
+); %>
 <section class="container">
-    <h1 class="title">Prospects
-        (<%= prospects ? prospects.length : 0 %>)
-    </h1>
-    
-   <div class="notification is-info">
-    <p>Cette page liste les clients Consogarage ayant commandé des articles PL* et n'étant pas en compte chez Ital Express**.</p>
-    <p class="is-size-7">* Champ "Sélection PL" activé au niveau de l'article. | ** Champ "Client Ital" activé au niveau du client.</p>
-</div>
-<%# JSON.stringify(locals.prospects) %>
-<% if (locals.prospects && prospects.length > 0) { %>
- <table class="table is-fullwidth">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Prenom</th>
-            <th>Nom</th>
-            <th>Société</th>
-            <th>email</th>
-            <th>Code postal</th>
-        </tr>
-    </thead>
-    <% const filteredProspects = prospects.filter(prospect => 
-    zipCodes.includes(prospect.postcode.substring(0, 2))
-  );
-  filteredProspects.forEach(prospect => { %>
-     <tr>
-        <td><%= prospect.id_customer %></td>
-        <td><%= prospect.firsname %></td>
-        <td><%= prospect.lastname %></td>
-        <td><%= prospect.company %></td>
-        <td><%= prospect.email %></td>
-        <td><%= prospect.postcode %></td>
-     </tr>
-    <% }) %>
+    <h1 class="title">Prospects</h1>
+<div class="tabs is-toggle is-fullwidth" id="tabs">
+    <ul>
+      <li class="is-active" data-tab="1">
+        <a>
+          Commandes  (<%= filteredProspects ? filteredProspects.length : 0 %>)
+        </a>
+      </li>
+      <li data-tab="2">
+        <a>
+          Devis
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div id="tab-content">
+    <div class="is-active" data-content="1">
+        <div class="notification is-info">
+            <p>Cette page liste les clients Consogarage ayant <strong>commandé des articles PL</strong>* et n'étant pas en compte chez Ital Express**.</p>
+            <p class="is-size-7">* Champ "Sélection PL" activé au niveau de l'article. | ** Champ "Client Ital" activé au niveau du client.</p>
+        </div>
+        <% if (locals.prospects && prospects.length > 0) { %>
+            <div class="table-container">
+            <table class="table">
+               <thead>
+                   <tr>
+                       <th>Ref cmde</th>
+                       <th>Date</th>
+                       <th>Société</th>
+                       <th>Code postal</th>
+                       <th>(secteur)</th>
+                       <th>email</th>
+                       <th>Total</th>
+                   </tr>
+               </thead>
+               <% 
+             filteredProspects.forEach(prospect => { %>
+                <tr>
+                   <td><%= prospect.reference%></td>
+                   <td><%= prospect.date_add %></td>
+                   <td><%= prospect.company %></td>
+                   <td><%= prospect.postcode %></td>
+                   <td>Sec</td>
+                   <td><%= prospect.email %></td>
+                   <td><%= parseFloat(prospect.total_paid).toFixed(2) %></td>
+                   
+                </tr>
+               <% }) %>
+           
+            </table>
+        </div>
+           <% } %>
+    </div>
+    <div data-content="2">
+        <div class="notification is-info">
+            <p>Cette page liste les clients Consogarage ayant <strong>reçu des devis contenant des articles PL</strong>* et n'étant pas en compte chez Ital Express**.</p>
+            <p class="is-size-7">* Champ "Sélection PL" activé au niveau de l'article. | ** Champ "Client Ital" activé au niveau du client.</p>
+        </div>
+        <div class="table-container is-fullwidth">
+          <% if (locals.quoteProspects && quoteProspects.length > 0) { %>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Ref</th>
+                    <th>Date</th>
+                    <th>Société</th>
+                    <th>Dept.</th>
+                    <th>Secteur</th>
+                    <th>email</th>
+                    <th>Statut</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+              <% 
+             quoteProspects.forEach(prospect => { console.log(prospect)%>
+              <tr>
+                <td><%= prospect.reference%></td>
+                <td><%= prospect.date_add%></td>
+                <td><%= prospect.company%></td>
+                <td><%= prospect.postcode%></td>
+                <td>Secteur</td>
+                <td><%= prospect.email%></td>
+                <td><span class="tag has-text-dark" style="background-color: <%= prospect.quotation_status_color %>;"><%= prospect.quotation_status_name%></span></td>
+                <td class="has-text-right"><%= parseFloat(prospect.total).toFixed(2)%></td>
+              </tr>
+                <%})%>
+                </tbody>
+                </table>
+                <% } %>
+                </div>
+    </div>
+  </div>
 
- </table>
-<% } %>
 </section>
 <%- include('../../partials/foot.ejs') %>  

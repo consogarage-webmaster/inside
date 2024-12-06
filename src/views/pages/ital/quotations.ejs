@@ -3,6 +3,11 @@
 let totalQuotes = 0; 
 let totalOrders = 0;
 
+let allSectors = false;
+if (locals.user.permissions.includes("superadmin")|locals.user.permissions.includes("direction-italexpress")){
+    allSectors = true;
+}
+
 if (locals.quotations && locals.quotations.length > 0) { 
 %>
     <% quotations.forEach(quotation => { %>
@@ -26,7 +31,8 @@ if (locals.quotations && locals.quotations.length > 0) {
                    <button id="filter-quotations-toggle" class="js-modal-trigger button is-inside" data-target="mainmodal" data-sector="<%= locals.user.sector%>"><i class="fas fa-filter"></i>&nbsp;Filtrer</button>
                 </div>
             </div>
-           
+            <%# // TODO responsive table %>
+            <div class="table-container is-fullwidth">
         <table class="table is-fullwidth">
             <thead>
                 <tr>
@@ -35,7 +41,9 @@ if (locals.quotations && locals.quotations.length > 0) {
                     <th>Société</th>
                     <th>N° Ital Express</th>
                     <th>Dept.</th>
-                    <th>Secteur</th>
+                    <% if (allSectors){ %>
+                        <th>Secteur</th>
+                   <% }%>
                     <th>email</th>
                     <th>Statut</th>
                     <th>Total</th>
@@ -57,7 +65,9 @@ if (locals.quotations && locals.quotations.length > 0) {
                     <td><%= quotation.customer.company%></td>
                     <td><%= quotation.customer.codeital%></td>
                     <td><%= quotation.customer.departement%></td>
-                    <td>Sec</td>
+                    <% if (allSectors){ %>
+                        <td>Sec</td>
+                   <% }%>
                     <td><%= quotation.customer.email%></td>
                     <td><span class="tag has-text-dark" style="background-color: <%= quotation.quotation.status_color %>;"><%= quotation.quotation.status_name%></span></td>                    
                     <td class="has-text-right"><% let total_quotation = 0;
@@ -73,5 +83,6 @@ if (locals.quotations && locals.quotations.length > 0) {
 
             </tbody>
         </table>
+        </div>
         </section>
 <%- include('../../partials/foot.ejs') %>  
