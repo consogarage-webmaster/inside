@@ -41,7 +41,7 @@ zipCodes.includes(prospect.postcode.substring(0, 2))
                <% 
              filteredProspects.forEach(prospect => { %>
                 <tr>
-                   <td><%= prospect.reference%></td>
+                   <td><button class="js-modal-trigger open-prospect-order-modal button is-small is-fullwidth" data-target="mainmodal" data-orderid="<%= prospect.id_order %>"><%= prospect.reference%></button></td>
                    <td><%= prospect.date_add %></td>
                    <td><%= prospect.company %></td>
                    <td><%= prospect.postcode %></td>
