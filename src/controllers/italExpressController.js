@@ -49,7 +49,7 @@ const italExpressController = {
               date_add: dayjs(customer.date_add).isValid()
                 ? dayjs(customer.date_add).format('DD/MM/YYYY')
                 : null,
-              sector: 'Unknown', // Default value
+              sector: '-',
             };
           }
 
@@ -66,7 +66,7 @@ const italExpressController = {
             date_add: dayjs(customer.date_add).isValid()
               ? dayjs(customer.date_add).format('DD/MM/YYYY')
               : null,
-            sector: sector ? sector.name : 'Unknown', // Replace 'name' with the actual column
+            sector: sector ? sector.name : '-', // Replace 'name' with the actual column
           };
         })
       );
