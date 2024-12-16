@@ -231,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function () {
         formData['order'] = checkedOrderRadio.value;
         formData['orderAttribute'] = checkedOrderRadio.dataset.orderattribute;
       }
-      // TODO fix button deployer
+
       console.log('Updated formData:', formData);
-      // Check if at least one property has a value
+
       const hasValue = Object.values(formData).some(
         value => value !== '' && value !== null && value !== undefined
       );
