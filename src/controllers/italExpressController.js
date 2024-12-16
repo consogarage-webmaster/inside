@@ -34,6 +34,9 @@ const italExpressController = {
     if (req.query.code) {
       customersApiUrl += `&code=${req.query.code}`;
     }
+    if (req.query.order && req.query.orderattribute) {
+      customersApiUrl += `&order=${req.query.order}&orderattribute=${req.query.orderattribute}`;
+    }
     console.log(customersApiUrl);
     try {
       // Step 1: Fetch quotations list in JSON format
@@ -66,7 +69,7 @@ const italExpressController = {
             date_add: dayjs(customer.date_add).isValid()
               ? dayjs(customer.date_add).format('DD/MM/YYYY')
               : null,
-            sector: sector ? sector.name : '-', // Replace 'name' with the actual column
+            sector: sector ? sector.name : '-',
           };
         })
       );

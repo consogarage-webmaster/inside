@@ -3,7 +3,7 @@
   <h1 class="title">Clients Ital-Express</h1>
   <div class="table-container">
     <table class="table">
-        <thead>
+        <thead id="customerFilters">
             <tr>
               <th>
                 <div class="field">
@@ -22,29 +22,8 @@
               </div>
               </th>
               <th>Département</th>
-              <th>Secteur 2025</th>
-              <th id="sector-selector">                  
-                <% if (locals.user.sector) { %>
-                  Secteur
-                <% } else { %>
-                  <div class="field">
-                    <label class="label">Secteur</label>
-                  <div class="control">
-                    <div class="select">
-                      <select >
-                        <option>Tous</option>
-                        <% if (locals.allGroups && allGroups.length > 0) { %>
-                         <% allGroups.forEach(group => { %>
-                          <option value="<%= group.id %>"><%= group.name %></option>
-                         <% }) %>
-                        <% } %>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <% } %>
-                
-              </th>
+              <th>Secteur</th>
+              
                 <th>
                   <div class="field">
                     <label class="label">Nom</label>
@@ -61,31 +40,49 @@
                       <input class="input" type="text" name="email" placeholder="Filtrer">
                   </div>
               </div></th>
-                <th>CA<br/><span class="is-size-7">Cette année</span></th>
+                <th>CA<br/><span class="is-size-7">Cette année</span>
+                <div class="filter-order">
+                  <div class="field">
+                    <label class="radio">
+                      <input type="radio" name="order" value="ASC" data-orderattribute="year_revenue">
+                      Asc
+                    </label>
+                    <label class="radio">
+                      <input type="radio" name="order" value="DESC" data-orderattribute="year_revenue">
+                      Desc
+                    </label>
+                  </div>
+                  
+                </div>
+                </th>
                 
-                <th>Inscription</th>
-                <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary ">OK</button></th>
+                <!-- <th>Inscription</th> -->
+                <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary " style="display: none;">OK</button>
+                  <a href="http://localhost:3000/ital-clients" title="reset filters" id="ital-customer-filter-reset" class="button is-small is-fullwidth is-warning " style="display: none;">Clear</a>
+                </th>
             </tr>
         </thead>
         <tbody id="customer-list">
             <% customers.forEach(customer => { %>
                 <tr>
                     <td><button class="js-modal-trigger open-customer-orders-modal button is-small is-fullwidth" data-target="mainmodal" data-customerid="<%= customer.id %>">
-                      <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :'Aucune société' %>
+                      <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :'Aucune société'%>
                                         </button>
                     </td>
                     <td class="is-size-7"><%= customer.codeital %></td>
                     <td><%= customer.departement%></td>
                     <td class="has-text-centered is-size-7"><%= customer.sector %></td>
-                    <td class="has-text-centered is-size-7"><%= customer.id_default_group%></td>
                     <td class="is-size-7"><%= customer.firstname %> <%= customer.lastname %></td>
                     <td class="is-size-7"><%= customer.email %></td>
                     <td class="has-text-right"><%= parseFloat(customer.year_revenue).toFixed(2) %></td>
-                    <td colspan="2" class="is-size-7"><%= customer.date_add %></td>
                 </tr>
             <% }) %>
         </tbody>
     </table>
+    <% if (customers.length < 1){%>
+      <a href="http://localhost:3000/ital-clients" title="reset filters" class="button is-small is-fullwidth is-warning " >Clear</a>
+    <%}%>
+    
   </div>
 </section>
 <%- include('../../partials/foot.ejs') %>

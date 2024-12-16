@@ -202,14 +202,58 @@ function getFilteredItalCustomers() {
 
   location.href = `/ital-clients?sector=${selectedSector}&name=${encodeURIComponent(searchName)}&company=${encodeURIComponent(searchCompany)}&email=${encodeURIComponent(searchEmail)}&code=${encodeURIComponent(searchCodeItal)}`;
 }
+// document.addEventListener('DOMContentLoaded', function () {
+//   const filterBtn = document.querySelector('#ital-customer-filter');
+//   if (filterBtn) {
+//     filterBtn.addEventListener('click', getFilteredItalCustomers);
+//     document.addEventListener('keydown', event => {
+//       if (event.key === 'Enter') {
+//         filterBtn.click();
+//       }
+//     });
+//   }
+// });
+// Handle customer filters all at once
 document.addEventListener('DOMContentLoaded', function () {
+  let formData = {};
+  const customerFilterInputs = document.querySelectorAll(
+    '#customerFilters input'
+  );
+
+  customerFilterInputs.forEach(input => {
+    input.addEventListener('input', () => {
+      formData[input.name] = input.value;
+      // Get order filter if set
+      const checkedOrderRadio = document.querySelector(
+        'input[name="order"]:checked'
+      );
+      if (checkedOrderRadio) {
+        formData['order'] = checkedOrderRadio.value;
+        formData['orderAttribute'] = checkedOrderRadio.dataset.orderattribute;
+      }
+      // TODO fix button deployer
+      console.log('Updated formData:', formData);
+      // Check if at least one property has a value
+      const hasValue = Object.values(formData).some(
+        value => value !== '' && value !== null && value !== undefined
+      );
+      const clearBtn = document.querySelector('#ital-customer-filter-reset');
+      const validBtn = document.querySelector('#ital-customer-filter');
+      if (hasValue || window.location.search) {
+        clearBtn.style.display = 'block';
+        validBtn.style.display = 'block';
+      } else {
+        clearBtn.style.display = 'none';
+        validBtn.style.display = 'none';
+      }
+      if (formData.length > 1) {
+      }
+    });
+  });
   const filterBtn = document.querySelector('#ital-customer-filter');
   if (filterBtn) {
-    filterBtn.addEventListener('click', getFilteredItalCustomers);
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Enter') {
-        filterBtn.click();
-      }
+    filterBtn.addEventListener('click', () => {
+      location.href = `/ital-clients?sector=&name=${encodeURIComponent(formData.nom || '')}&company=${encodeURIComponent(formData.societe || '')}&email=${encodeURIComponent(formData.email || '')}&code=${encodeURIComponent(formData.codeital || '')}&order=${encodeURIComponent(formData.order || '')}&orderattribute=${encodeURIComponent(formData.orderAttribute || '')}`;
     });
   }
 });
