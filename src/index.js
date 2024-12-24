@@ -26,6 +26,7 @@ import { User } from './models/associations.js';
 import { authenticateToken, generateToken } from './utils/auth.js';
 import customerController from './controllers/customerController.js';
 import italExpressController from './controllers/italExpressController.js';
+import frontQueriesController from './controllers/frontQueriesController.js';
 // import verifySessionUser from './middlewares/authMiddleware.js';
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -111,7 +112,11 @@ app.get(
   authenticationController.controlUserConnection,
   italExpressController.sectors
 );
-
+// Front Queries
+app.get(
+  '/webservice/customerorders/:id',
+  frontQueriesController.getCustomerOrders
+);
 // Errors
 app.get('/*', authenticationController.controlUserConnection, (req, res) => {
   res.render('error/404.ejs');

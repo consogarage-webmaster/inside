@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
   modalContent = document.querySelector('#mainmodal .modal-content');
 });
 async function fetchOrderDetailsJson(orderId) {
-  const apiUrl = `https://www.consogarage.com/api/orders/${orderId}?ws_key=${apiKey}&output_format=JSON`;
+  const apiUrl = `https://www.consogarage.com/api/orders/${orderId}?ws_key=safelysubmit&output_format=JSON`;
+  // const apiUrl = `/webservice/`;
 
   try {
     const response = await fetch(apiUrl);
@@ -482,7 +483,10 @@ document.addEventListener('DOMContentLoaded', function () {
     fromDate = null,
     toDate = null
   ) {
-    let apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
+    // let apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
+    let apiUrl = `/webservice/customerorders/${customerId}`;
+
+    console.log(apiUrl);
 
     // Add date filters if provided
     if (fromDate) apiUrl += `&filter[invoice_date]=[${fromDate},${toDate}]`;
@@ -549,13 +553,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>`;
 
       if (orderArray.length > 0) {
+        console.log(JSON.stringify(orderArray));
         const orderTable = `
                     <table id="customer-orders" class="table is-fullwidth">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Total</th>
                                 <th>Date</th>
+                                <th>Total articles</th>
+                                <th>Frais de port</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -564,8 +571,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                 order => `
                                 <tr>
                                     <td>${order.orderId}</td>
-                                    <td class="has-text-right">${order.totalPaid.toFixed(2)}</td>
                                     <td>${order.dateAdded}</td>
+                                    <td class="has-text-right">à extraire</td>
+                                    <td class="has-text-right">à extraire</td>
+                                    
+                                    
                                 </tr>`
                               )
                               .join('')}
