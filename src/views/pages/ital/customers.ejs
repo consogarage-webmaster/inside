@@ -9,7 +9,7 @@
                 <div class="field">
                   <label class="label">Société</label>
                   <div class="control">
-                      <input class="input" type="text" name="societe" placeholder="Filtrer">
+                      <input class="input <%= locals.filters.company ? 'is-info' :'' %>" type="text" name="societe" placeholder="Filtrer" value="<%= locals.filters.company ? locals.filters.company : '' %>">
                   </div>
               </div>
               </th>
@@ -17,18 +17,50 @@
                 <div class="field">
                   <label class="label">Code client</label>
                   <div class="control">
-                      <input class="input" type="text" name="codeital" placeholder="Filtrer">
+                      <input class="input <%= locals.filters.code ? 'is-info' :'' %>" type="text" name="codeital" placeholder="Filtrer" value="<%= locals.filters.code ? locals.filters.code : '' %>">
                   </div>
               </div>
               </th>
-              <th>Département</th>
-              <th>Secteur</th>
+              <th>
+                <div class="field">
+                <label class="label">Département</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="zipcode" class="<%= locals.filters.zipcode ? 'is-info' :'' %>">
+
+                      <option <%= locals.filters.zipcode ? '' : 'selected' %> disabled>Filtrer</option>
+                      <% locals.allZipcodes.forEach(oneZipcode => { %>
+                        <% console.log(`local zip : ${locals.filters.zipcode} - item zip : ${oneZipcode.zipcode}`) %>
+                        <option 
+                          value="<%= oneZipcode.zipcode %>" 
+                          <%= locals.filters.zipcode == oneZipcode.zipcode ? 'selected' : '' %>>
+                          <%= oneZipcode.zipcode %> <%= oneZipcode.name %>
+                        </option>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              </th>
+              <th><div class="field">
+                <label class="label">Secteurs</label>
+                <div class="control">
+                  <div class="select">
+                    <select name="sector" class="<%= locals.filters.sector ? 'is-info' :'' %>">
+                      <option <%= locals.filters.sector ? '' : 'selected' %> disabled>FIltrer</option>
+                      <% locals.sectors.forEach(sector => { %>
+                        <option value="<%= sector.id %>"><%= sector.name %></option>
+                      <% }) %>
+                    </select>
+                  </div>
+                </div>
+              </div></th>
               
                 <th>
                   <div class="field">
                     <label class="label">Nom</label>
                     <div class="control">
-                        <input class="input" type="text" name="nom" placeholder="Filtrer">
+                      <input class="input <%= locals.filters.name ? 'is-info' :'' %>" type="text" name="nom" placeholder="Filtrer" value="<%= locals.filters.name ? locals.filters.name : '' %>">
                     </div>
                 </div>
                 </th>
@@ -37,7 +69,7 @@
                   <div class="field">
                   <label class="label">email</label>
                   <div class="control">
-                      <input class="input" type="text" name="email" placeholder="Filtrer">
+                      <input class="input <%= locals.filters.email ? 'is-info' :'' %>" type="text" name="email" placeholder="Filtrer" value="<%= locals.filters.email ? locals.filters.email : '' %>">
                   </div>
               </div></th>
                 <th>CA<br/><span class="is-size-7">Cette année</span>
@@ -57,8 +89,8 @@
                 </th>
                 
                 <!-- <th>Inscription</th> -->
-                <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary " style="display: none;">OK</button>
-                  <a href="http://localhost:3000/ital-clients" title="reset filters" id="ital-customer-filter-reset" class="button is-small is-fullwidth is-warning " style="display: none;">Clear</a>
+                <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary " >OK</button>
+                  <a href="http://localhost:3000/ital-clients" title="reset filters" id="ital-customer-filter-reset" class="button is-small is-fullwidth is-warning ">Clear</a>
                 </th>
             </tr>
         </thead>
@@ -66,7 +98,7 @@
             <% customers.forEach(customer => { %>
                 <tr>
                     <td><button class="js-modal-trigger open-customer-orders-modal button is-small is-fullwidth" data-target="mainmodal" data-customerid="<%= customer.id %>">
-                      <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :'Aucune société'%>
+                      <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :''%>
                                         </button>
                     </td>
                     <td class="is-size-7"><%= customer.codeital %></td>
@@ -80,7 +112,7 @@
         </tbody>
     </table>
     <% if (customers.length < 1){%>
-      <a href="http://localhost:3000/ital-clients" title="reset filters" class="button is-small is-fullwidth is-warning " >Clear</a>
+      <a href="http://localhost:3000/ital-clients" title="reset filters" class="button is-small is-fullwidth is-warning " >Aucun client trouvé : Retirer les filtres</a>
     <%}%>
     
   </div>

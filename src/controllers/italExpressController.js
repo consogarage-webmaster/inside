@@ -22,22 +22,47 @@ let customerGroupsNames = [
 const italExpressController = {
   customersPage: async (req, res) => {
     let customersApiUrl = `https://www.consogarage.com/consogarage-api/api/customers-italexpress.php?1=1`;
+    const filters = {};
+    if (req.query.sector) {
+      const foundZipcodes = await Zipcode.findAll({
+        where: {
+          id_sector: req.query.sector,
+        },
+      });
+      const encodedZipcodes = foundZipcodes.map(z => z.zipcode).join(',');
+      customersApiUrl += `&sector=${encodedZipcodes}`;
+      filters.sector = req.query.sector;
+
+      console.log('zips : ' + foundZipcodes);
+    }
     if (req.query.name) {
       customersApiUrl += `&name=${req.query.name}`;
+      filters.name = req.query.name;
     }
     if (req.query.company) {
       customersApiUrl += `&company=${req.query.company}`;
+      filters.company = req.query.company;
     }
     if (req.query.email) {
       customersApiUrl += `&email=${req.query.email}`;
+      filters.email = req.query.email;
     }
     if (req.query.code) {
       customersApiUrl += `&code=${req.query.code}`;
+      filters.code = req.query.code;
+    }
+    if (req.query.zipcode) {
+      customersApiUrl += `&zipcode=${req.query.zipcode}`;
+      filters.zipcode = req.query.zipcode;
     }
     if (req.query.order && req.query.orderattribute) {
       customersApiUrl += `&order=${req.query.order}&orderattribute=${req.query.orderattribute}`;
+      filters.order = req.query.order;
+      filters.orderattribute = req.query.orderattribute;
     }
     console.log(customersApiUrl);
+    const zipcodesApiUrl =
+      'https://www.consogarage.com/consogarage-api/api/?italzipcodes=true';
     try {
       // Step 1: Fetch quotations list in JSON format
       const response = await axios.get(customersApiUrl);
@@ -77,9 +102,14 @@ const italExpressController = {
       // const dataWithSectors = data.map(customer => {
       //   customer.sector = "mysector"
       // });
+      const zipcodes = await Zipcode.findAll();
+      const sectors = await Sector.findAll();
       res.render('pages/ital/customers.ejs', {
         customers: formattedData,
         allGroups: customerGroupsNames,
+        allZipcodes: zipcodes,
+        sectors: sectors,
+        filters: filters,
       });
     } catch (error) {
       console.error('Error fetching customers or details:', error);

@@ -190,18 +190,19 @@ function initProtectedLinks() {
   });
 }
 
-function getFilteredItalCustomers() {
-  // alert('ital');
-  const selectedSector = document.querySelector(
-    '#sector-selector select'
-  ).value;
-  const searchName = document.querySelector('input[name="nom"]').value;
-  const searchCompany = document.querySelector('input[name="societe"]').value;
-  const searchEmail = document.querySelector('input[name="email"]').value;
-  const searchCodeItal = document.querySelector('input[name="codeital"]').value;
+// function getFilteredItalCustomers() {
+//   // alert('ital');
+//   const selectedSector = document.querySelector(
+//     '#sector-selector select'
+//   ).value;
+//   const searchName = document.querySelector('input[name="nom"]').value;
+//   const searchCompany = document.querySelector('input[name="societe"]').value;
+//   const searchEmail = document.querySelector('input[name="email"]').value;
+//   const searchCodeItal = document.querySelector('input[name="codeital"]').value;
+//   const searchZipcode = document.querySelector('input[name="zipcode"]').value;
 
-  location.href = `/ital-clients?sector=${selectedSector}&name=${encodeURIComponent(searchName)}&company=${encodeURIComponent(searchCompany)}&email=${encodeURIComponent(searchEmail)}&code=${encodeURIComponent(searchCodeItal)}`;
-}
+//   location.href = `/ital-clients?sector=${selectedSector}&name=${encodeURIComponent(searchName)}&company=${encodeURIComponent(searchCompany)}&email=${encodeURIComponent(searchEmail)}&code=${encodeURIComponent(searchCodeItal)}&zipcode=${encodeURIComponent(searchZipcode)}`;
+// }
 // document.addEventListener('DOMContentLoaded', function () {
 //   const filterBtn = document.querySelector('#ital-customer-filter');
 //   if (filterBtn) {
@@ -216,8 +217,18 @@ function getFilteredItalCustomers() {
 // Handle customer filters all at once
 document.addEventListener('DOMContentLoaded', function () {
   let formData = {};
+  const existingValues = Array.from(
+    document.querySelectorAll('input[value]')
+  ).filter(input => input.value.trim() !== '');
+  existingValues.forEach(oneInput => {
+    console.log(oneInput.name);
+    formData = {
+      ...formData,
+      [oneInput.name]: oneInput.value,
+    };
+  });
   const customerFilterInputs = document.querySelectorAll(
-    '#customerFilters input'
+    '#customerFilters input, #customerFilters select'
   );
 
   customerFilterInputs.forEach(input => {
@@ -237,15 +248,15 @@ document.addEventListener('DOMContentLoaded', function () {
       const hasValue = Object.values(formData).some(
         value => value !== '' && value !== null && value !== undefined
       );
-      const clearBtn = document.querySelector('#ital-customer-filter-reset');
-      const validBtn = document.querySelector('#ital-customer-filter');
-      if (hasValue || window.location.search) {
-        clearBtn.style.display = 'block';
-        validBtn.style.display = 'block';
-      } else {
-        clearBtn.style.display = 'none';
-        validBtn.style.display = 'none';
-      }
+      // const clearBtn = document.querySelector('#ital-customer-filter-reset');
+      // const validBtn = document.querySelector('#ital-customer-filter');
+      // if (hasValue || window.location.search) {
+      //   clearBtn.style.display = 'block';
+      //   validBtn.style.display = 'block';
+      // } else {
+      //   clearBtn.style.display = 'none';
+      //   validBtn.style.display = 'none';
+      // }
       if (formData.length > 1) {
       }
     });
@@ -253,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const filterBtn = document.querySelector('#ital-customer-filter');
   if (filterBtn) {
     filterBtn.addEventListener('click', () => {
-      location.href = `/ital-clients?sector=&name=${encodeURIComponent(formData.nom || '')}&company=${encodeURIComponent(formData.societe || '')}&email=${encodeURIComponent(formData.email || '')}&code=${encodeURIComponent(formData.codeital || '')}&order=${encodeURIComponent(formData.order || '')}&orderattribute=${encodeURIComponent(formData.orderAttribute || '')}`;
+      location.href = `/ital-clients?name=${encodeURIComponent(formData.nom || '')}&company=${encodeURIComponent(formData.societe || '')}&email=${encodeURIComponent(formData.email || '')}&code=${encodeURIComponent(formData.codeital || '')}&zipcode=${encodeURIComponent(formData.zipcode || '')}&sector=${encodeURIComponent(formData.sector || '')}&order=${encodeURIComponent(formData.order || '')}&orderattribute=${encodeURIComponent(formData.orderAttribute || '')}`;
     });
   }
 });

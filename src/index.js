@@ -90,7 +90,7 @@ app.get(
 );
 
 // Ital Express pages
-app.get(
+app.use(
   '/ital-clients',
   authenticationController.controlUserConnection,
   italExpressController.customersPage
