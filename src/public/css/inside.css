@@ -1,7 +1,85 @@
 :root{
     --redcolor : #be1e2b;
     --inside-purple : #502bd3;
+
+
+    /* SECTORS */
+    --sectorColor1: #ff8533; /* Rouge vif */
+--sectorColor2: #33ff57; /* Vert vif */
+--sectorColor3: #3357ff; /* Bleu vif */
+--sectorColor4: #ff33a8; /* Rose vif */
+--sectorColor5: #f4d03f; /* Jaune doré */
+--sectorColor6: #8e44ad; /* Violet profond */
+--sectorColor7: #1abc9c; /* Turquoise */
+--sectorColor8: #ee2c1e; /* Rouge brique */
 }
+path.sector1 {
+    fill: var(--sectorColor1);
+}
+
+path.sector2 {
+    fill: var(--sectorColor2);
+}
+
+path.sector3 {
+    fill: var(--sectorColor3);
+}
+
+path.sector4 {
+    fill: var(--sectorColor4);
+}
+
+path.sector5 {
+    fill: var(--sectorColor5);
+}
+
+path.sector6 {
+    fill: var(--sectorColor6);
+}
+
+path.sector7 {
+    fill: var(--sectorColor7);
+}
+
+path.sector8 {
+    fill: var(--sectorColor8);
+}
+
+
+li.sector1 ul .tag {
+    background-color: var(--sectorColor1);
+}
+
+li.sector2 ul .tag {
+    background-color: var(--sectorColor2);
+}
+
+li.sector3 ul .tag {
+    background-color: var(--sectorColor3);
+}
+
+li.sector4 ul .tag {
+    background-color: var(--sectorColor4);
+}
+
+li.sector5 ul .tag {
+    background-color: var(--sectorColor5);
+}
+
+li.sector6 ul .tag {
+    background-color: var(--sectorColor6);
+}
+
+li.sector7 ul .tag {
+    background-color: var(--sectorColor7);
+}
+
+li.sector8 ul .tag {
+    background-color: var(--sectorColor8);
+}
+
+li.tag{color:#000;}
+
 aside:not(:has(p)){
     display:none;
 }
@@ -9,29 +87,34 @@ h1.title{
     color:var(--inside-purple);
     padding-top: 20px;
 }
+.dropdown-content {
+    left: auto !important; /* Réinitialise le style par défaut */
+    right: 0; /* Aligne le menu sur le côté gauche */
+}
 @media (width > 1000px){
     #maincontainer{
-        display:flex;
-        justify-content: space-between;
+        display:grid;
+        grid-template-columns:150px calc(100% - 150px);
         min-height:80vh
-
     }
     aside{
-        flex-basis:200px;
+        /* flex-basis:200px; */
         border-right:solid 1px rgba(255,255,255,.1)
     }
     .navbar{
         border-bottom: solid 1px rgba(255,255,255,.1);
     }
     main{
-        flex-grow: 2;
+        /* flex-grow: 2; */
         display: flex;
         flex-direction: column;
         justify-content: center;
+        flex-basis: calc(100% - 300px)
     }
     main>*{
         flex-grow:0!important;
         padding:0 20px;
+        
         
     }
     /* main>.container{
@@ -80,4 +163,20 @@ button.is-inside{
     display:flex;
     flex-wrap: wrap;
     gap:5px;
+  }
+
+  #customerFilters th:first-child, #customerFilters th:nth-child(2), #customerFilters td:first-child, .open-customer-orders-modal{
+    max-width:150px;
+  }
+  #customerFilters select, #customerFilters input{
+    max-width:150px;
+  }
+  #customer-list {
+    font-size:12px
+  }
+  #maincontainer aside.menu{
+    flex-basis:200px;
+  }
+  #maincontainer > section{
+    flex-basis: calc(100% - 200px);
   }

@@ -1,13 +1,15 @@
 <%- include('partials/head.ejs') %>
-        <section class="container">
-            <h1 class="title">Accueil</h1>
-           <% if (locals.user) { %>
-            <h2 class="subtitle"><%= locals.user.name %></h2>
-           <% } %>
-           <div class="columns is-multuiline">
+        <section class="container columns is-multiline">
+           <div class="column is-12">
+                <h1 class="title">Accueil</h1>
+                <% if (locals.user) { %>
+                 <h2 class="subtitle"><%= locals.user.name %></h2>
+                <% } %>
+           </div>
+           
                 <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin" || permission === "commercial-italexpress" || permission === "direction-italexpress").length > 0 ) { %> 
                         <%- include('partials/dashboards/dashboardItal.ejs') %>
                         <%}%>
-           </div>
+           
         </section>
 <%- include('partials/foot.ejs') %>  

@@ -2,13 +2,13 @@
 <section>
   <h1 class="title">Clients Ital-Express</h1>
   <div class="table-container">
-    <table class="table">
+    <table class="table is-fullwidth">
         <thead id="customerFilters">
             <tr>
               <th>
                 <div class="field">
                   <label class="label">Société</label>
-                  <div class="control">
+                  <div class="control is-small ">
                       <input class="input <%= locals.filters.company ? 'is-info' :'' %>" type="text" name="societe" placeholder="Filtrer" value="<%= locals.filters.company ? locals.filters.company : '' %>">
                   </div>
               </div>
@@ -16,7 +16,7 @@
               <th>
                 <div class="field">
                   <label class="label">Code client</label>
-                  <div class="control">
+                  <div class="control is-small ">
                       <input class="input <%= locals.filters.code ? 'is-info' :'' %>" type="text" name="codeital" placeholder="Filtrer" value="<%= locals.filters.code ? locals.filters.code : '' %>">
                   </div>
               </div>
@@ -24,16 +24,15 @@
               <th>
                 <div class="field">
                 <label class="label">Département</label>
-                <div class="control">
+                <div class="control is-small ">
                   <div class="select">
                     <select name="zipcode" class="<%= locals.filters.zipcode ? 'is-info' :'' %>">
 
-                      <option <%= locals.filters.zipcode ? '' : 'selected' %> disabled>Filtrer</option>
+                      <option class="is-size-7" <%= locals.filters.zipcode ? '' : 'selected' %> disabled>Filtrer</option>
                       <% if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { %>
                       <% locals.allZipcodes.forEach(oneZipcode => { %>
                         <%# console.log(`local zip : ${locals.filters.zipcode} - item zip : ${oneZipcode.zipcode}`) %>
-                       
-                        <option 
+                        <option class="is-size-7" 
                           value="<%= oneZipcode.zipcode %>" 
                           <%= locals.filters.zipcode == oneZipcode.zipcode ? 'selected' : '' %>>
                           <%= oneZipcode.zipcode %> <%= oneZipcode.name %>
@@ -42,7 +41,7 @@
                       <% }) %>
                       <% }else{ %>
                         <% locals.userZipcodes.forEach(oneZipcode => { %>
-                          <option 
+                          <option class="is-size-7"
                           value="<%= oneZipcode.zipcode %>" 
                           <%= locals.filters.zipcode == oneZipcode.zipcode ? 'selected' : '' %>>
                           <%= oneZipcode.zipcode %> <%= oneZipcode.name %>
@@ -58,7 +57,7 @@
 <% if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { %>
               <th><%# 'user : ' + JSON.stringify(locals.user.permissions) %><div class="field">
                 <label class="label">Secteurs</label>
-                <div class="control">
+                <div class="control is-small ">
                   <div class="select">
                     <select name="sector" class="<%= locals.filters.sector ? 'is-info' :'' %>">
                       <option <%= locals.filters.sector ? '' : 'selected' %> disabled>FIltrer</option>
@@ -74,7 +73,7 @@
                 <th>
                   <div class="field">
                     <label class="label">Nom</label>
-                    <div class="control">
+                    <div class="control is-small ">
                       <input class="input <%= locals.filters.name ? 'is-info' :'' %>" type="text" name="nom" placeholder="Filtrer" value="<%= locals.filters.name ? locals.filters.name : '' %>">
                     </div>
                 </div>
@@ -83,7 +82,7 @@
                 <th>
                   <div class="field">
                   <label class="label">email</label>
-                  <div class="control">
+                  <div class="control is-small ">
                       <input class="input <%= locals.filters.email ? 'is-info' :'' %>" type="text" name="email" placeholder="Filtrer" value="<%= locals.filters.email ? locals.filters.email : '' %>">
                   </div>
               </div></th>

@@ -524,9 +524,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Update modal content with filtered orders
       modalContent.innerHTML = `
-                <div class="columns">
-                    <h2 class="subtitle column">Id client : ${customerId}</h2>
-                    <div class="column is-6">
+                <div class="columns is-multiline">
+                    <h2 class="subtitle column is-6">Id client : ${customerId}</h2>
+                    <div class="column is-6 has-text-right"><strong>${countOrders}</strong> commande${countOrders > 1 ? 's' : ''}<br/>Total : ${totalOrders.toFixed(2)} €</div></div>
+                    <div class="column is-12">
                         <form id="date-filter-form" action="#" method="POST" class="columns is-multiline">
                             <div class="field column is-6">
                                 <label class="label" for="from-date">Depuis:</label>
@@ -552,8 +553,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <button id="reset-date-filters" class="button is-warning is-small is-fullwidth"onclick="resetDateFilters()">Clear</button>
                                 </div>
                             </div>
-                        <br/><strong>${countOrders}</strong> commande${countOrders > 1 ? 's' : ''}</div>
-                    <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
+                        <br/>
+                    
                 </div>
                 <div class="has-text-right">
                     <button id="xls-dowloader" class="button has-text-success">

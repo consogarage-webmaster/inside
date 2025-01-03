@@ -83,3 +83,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTabs();
 });
+
+// Dropdowns
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdowns = document.querySelectorAll('.dropdown');
+
+  dropdowns.forEach(dropdown => {
+    const trigger = dropdown.querySelector('.dropdown-trigger');
+    trigger.addEventListener('click', () => {
+      dropdown.classList.toggle('is-active');
+    });
+  });
+
+  document.addEventListener('click', event => {
+    dropdowns.forEach(dropdown => {
+      if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove('is-active');
+      }
+    });
+  });
+});
