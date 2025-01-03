@@ -105,7 +105,7 @@
                 
                 <!-- <th>Inscription</th> -->
                 <th><button id="ital-customer-filter" class="button is-small is-fullwidth is-primary " >OK</button>
-                  <a href="http://localhost:3000/ital-clients" title="reset filters" id="ital-customer-filter-reset" class="button is-small is-fullwidth is-warning ">Clear</a>
+                  <a href="/ital-clients" title="reset filters" id="ital-customer-filter-reset" class="button is-small is-fullwidth is-warning ">Clear</a>
                 </th>
             </tr>
         </thead>
@@ -135,7 +135,8 @@
                     <% } %>
                     <td class="is-size-7"><%= customer.firstname %> <%= customer.lastname %></td>
                     <td class="is-size-7"><%= customer.email %></td>
-                    <td class="has-text-right"><%= parseFloat(customer.year_revenue).toFixed(2) %></td>
+                    <td class="has-text-right"><%= isNaN(parseFloat(customer.year_revenue)) ? "0.00" : parseFloat(customer.year_revenue).toFixed(2) %>
+                    </td>
                 </tr>
                 <% } %>
                
@@ -143,7 +144,7 @@
         </tbody>
     </table>
     <% if (customers.length < 1){%>
-      <a href="http://localhost:3000/ital-clients" title="reset filters" class="button is-small is-fullwidth is-warning " >Aucun client trouvé : Retirer les filtres</a>
+      <a href="/ital-clients" title="reset filters" class="button is-small is-fullwidth is-warning " >Aucun client trouvé : Retirer les filtres</a>
     <%}%>
     
   </div>

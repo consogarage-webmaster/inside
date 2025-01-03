@@ -19,10 +19,12 @@
     <p class="menu-label">Ital Express</p>
     <ul class="menu-list">
       <li><a href="<%= process.env.APP_ROOT %>/ital-clients">Clients</a></li>
+      <% if (locals.user && user.permissions && user.permissions.filter((permission) => permission === "superadmin" || permission === "direction-italexpress").length > 0 ) { %> 
       <li>
         <a href="<%= process.env.APP_ROOT %>/devis<%= user.sector ? '?customergroups=' + user.sector : '' %>">Devis</a>
       </li>
       <li><a href="<%= process.env.APP_ROOT %>/prospects">Prospects</a></li>
+      <% } %>
 
     </ul>
   <% } %></aside>

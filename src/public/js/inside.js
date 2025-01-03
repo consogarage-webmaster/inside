@@ -601,15 +601,15 @@ document.addEventListener('DOMContentLoaded', function () {
       function generateXLSXWithProducts(orders) {
         // Define headers
         const headers = [
-          'Order ID',
-          'Invoice Date',
-          'Total Articles',
-          'Total Transport',
-          'Product Reference',
-          'Product Name',
-          'Product Unit Price',
-          'Product Quantity',
-          'Product Total',
+          'N° Cde',
+          'Date Cde',
+          'Montant Cde (€ HT)',
+          'Port sur Cde (€ HT)',
+          'Réf. Produit',
+          'Désignation Produit',
+          'Prix unitaire (€ HT)',
+          'Qté Cdée',
+          'Montant Produit Cdé (€ HT)',
         ];
 
         // Create an array of rows with the headers and order data
@@ -617,16 +617,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
         orders.forEach(order => {
           order.products.forEach(product => {
+            const date = new Date(order.dateAdded);
+            const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
             const row = [
               order.orderId,
-              order.dateAdded,
-              parseFloat(order.totalArticles).toFixed(2),
-              parseFloat(order.totalShipping).toFixed(2),
+              formattedDate,
+              (
+                parseFloat(order.totalArticles) +
+                parseFloat(order.totalShipping)
+              )
+                .toFixed(2)
+                .replace('.', ','),
+              parseFloat(order.totalShipping).toFixed(2).replace('.', ','),
               product.product_reference,
               product.product_name,
-              parseFloat(product.unit_price_tax_excl).toFixed(2),
+              parseFloat(product.unit_price_tax_excl)
+                .toFixed(2)
+                .replace('.', ','),
               product.product_quantity,
-              parseFloat(product.total_price_tax_excl).toFixed(2),
+              parseFloat(product.total_price_tax_excl)
+                .toFixed(2)
+                .replace('.', ','),
             ];
             data.push(row);
           });
