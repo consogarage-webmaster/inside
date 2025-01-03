@@ -2,6 +2,24 @@
     
 </div>
 <div class="column is-6">
-    <h3>Secteur</h3>
-    <%- include('map.ejs') %>
+    <h3 class="title is-size-8">Secteur<%= locals.user.permissions.includes("superadmin") ? 's' : '' %></h3>
+
+    <% if (locals.allSectors) { %>
+        <ul class="sectors">
+     <% allSectors.forEach(sector => { %>
+    <% if (sector.id === locals.user.sector) { %>
+        <li><%= sector.name %>
+            <ul>
+                <% sector.zipcodes.forEach(zipcode => { %>
+                    <li class="tag is-info"><%= zipcode.zipcode %> - <%= zipcode.name %></li>
+                    <%})%>
+            </ul>
+        </li>
+    <% } %>
+      
+     <% }) %>
+    </ul>
+    <% } %>
+    <%# JSON.stringify(locals.user) %>
+    <%# include('map.ejs') %>
 </div>

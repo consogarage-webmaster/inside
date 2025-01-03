@@ -76,3 +76,8 @@ button.is-inside{
     display: block;
   }
   svg{max-width:100%;}
+  .sectors ul{
+    display:flex;
+    flex-wrap: wrap;
+    gap:5px;
+  }

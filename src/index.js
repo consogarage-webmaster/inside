@@ -12,6 +12,7 @@ import authenticationController from './controllers/authenticationController.js'
 import userController from './controllers/userController.js';
 import adminController from './controllers/adminController.js';
 import consogarageController from './controllers/consogarageController.js';
+import { Zipcode } from './models/associations.js';
 // import userController from './controllers/userController.js';
 // import adminController from './controllers/adminController.js';
 const __filename = fileURLToPath(import.meta.url);
@@ -21,7 +22,7 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = process.env.JWT_SECRET;
 const app = express();
 const PORT = process.env.PORT || 3000;
-import { User } from './models/associations.js';
+import { Sector, User } from './models/associations.js';
 // import {User} from './models/associations.js';
 import { authenticateToken, generateToken } from './utils/auth.js';
 import customerController from './controllers/customerController.js';
@@ -65,9 +66,24 @@ app.locals.formatNumber = number => {
   }).format(number);
 };
 
-app.get('/', authenticationController.controlUserConnection, (req, res) => {
-  res.render('index.ejs');
-});
+app.get(
+  '/',
+  authenticationController.controlUserConnection,
+  async (req, res) => {
+    try {
+      const allSectors = await Sector.findAll({
+        include: {
+          model: Zipcode,
+          as: 'zipcodes', // Match the alias used in the association
+        },
+      });
+      res.render('index.ejs', { allSectors });
+    } catch (error) {
+      console.error('Error fetching sectors:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+);
 app.get('/login', (req, res) => {
   res.render('login.ejs');
 });
