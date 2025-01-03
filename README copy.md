@@ -54,8 +54,8 @@ npm run compose:dev
 ```
 ## Executer le seeding sur le container
 ```
-docker-compose exec app npm run createTables
-docker-compose exec app npm run seedTables
+docker compose exec app npm run createTables
+docker compose exec app npm run seedTables
 
 ```
 ## start from scratch
@@ -71,3 +71,5 @@ npm run compose:dev
 docker stop $(docker ps -a -q)
 
 docker system prune
+
+Fix docker : docker context use default

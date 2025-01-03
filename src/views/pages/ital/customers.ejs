@@ -29,20 +29,34 @@
                     <select name="zipcode" class="<%= locals.filters.zipcode ? 'is-info' :'' %>">
 
                       <option <%= locals.filters.zipcode ? '' : 'selected' %> disabled>Filtrer</option>
+                      <% if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { %>
                       <% locals.allZipcodes.forEach(oneZipcode => { %>
-                        <% console.log(`local zip : ${locals.filters.zipcode} - item zip : ${oneZipcode.zipcode}`) %>
+                        <%# console.log(`local zip : ${locals.filters.zipcode} - item zip : ${oneZipcode.zipcode}`) %>
+                       
                         <option 
                           value="<%= oneZipcode.zipcode %>" 
                           <%= locals.filters.zipcode == oneZipcode.zipcode ? 'selected' : '' %>>
                           <%= oneZipcode.zipcode %> <%= oneZipcode.name %>
                         </option>
+                        
                       <% }) %>
+                      <% }else{ %>
+                        <% locals.userZipcodes.forEach(oneZipcode => { %>
+                          <option 
+                          value="<%= oneZipcode.zipcode %>" 
+                          <%= locals.filters.zipcode == oneZipcode.zipcode ? 'selected' : '' %>>
+                          <%= oneZipcode.zipcode %> <%= oneZipcode.name %>
+                        </option>
+                          <% }) %>
+                        
+                      <% } %>
                     </select>
                   </div>
                 </div>
               </div>
               </th>
-              <th><div class="field">
+<% if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { %>
+              <th><%# 'user : ' + JSON.stringify(locals.user.permissions) %><div class="field">
                 <label class="label">Secteurs</label>
                 <div class="control">
                   <div class="select">
@@ -55,6 +69,7 @@
                   </div>
                 </div>
               </div></th>
+              <% } %>
               
                 <th>
                   <div class="field">
@@ -96,18 +111,34 @@
         </thead>
         <tbody id="customer-list">
             <% customers.forEach(customer => { %>
-                <tr>
-                    <td><button class="js-modal-trigger open-customer-orders-modal button is-small is-fullwidth" data-target="mainmodal" data-customerid="<%= customer.id %>">
+              <% let displayCustomer = false;
+              if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { 
+                displayCustomer = true;
+                }else 
+                {
+                  const zipcodesArray = locals.userZipcodes.map(entry => entry.zipcode); // Extract zipcodes
+
+                if (zipcodesArray.includes(parseInt(customer.departement))) {
+    displayCustomer = true;
+}
+                }%>
+                <% if (displayCustomer) { %>
+                  <tr>
+                    <td><%# displayCustomer %><button class="js-modal-trigger open-customer-orders-modal button is-small is-fullwidth" data-target="mainmodal" data-customerid="<%= customer.id %>">
                       <i class="fa fa-eye is-pulled-left"></i>&nbsp;<%= customer.company ? customer.company :''%>
                                         </button>
                     </td>
                     <td class="is-size-7"><%= customer.codeital %></td>
                     <td><%= customer.departement%></td>
+                    <% if (user.permissions.includes("direction-italexpress") || user.permissions.includes("superadmin")) { %>
                     <td class="has-text-centered is-size-7"><%= customer.sector %></td>
+                    <% } %>
                     <td class="is-size-7"><%= customer.firstname %> <%= customer.lastname %></td>
                     <td class="is-size-7"><%= customer.email %></td>
                     <td class="has-text-right"><%= parseFloat(customer.year_revenue).toFixed(2) %></td>
                 </tr>
+                <% } %>
+               
             <% }) %>
         </tbody>
     </table>

@@ -158,37 +158,37 @@ const seedData = async () => {
         id_user: insertedUsers.find(
           user => user.email === 'pforestier@ital-express.fr'
         ).id,
-        id_group: 30,
+        id_group: 8,
       },
       {
         id_user: insertedUsers.find(
           user => user.email === 'bgarinsudest@ital-express.fr'
         ).id,
-        id_group: 31,
+        id_group: 1,
       },
       {
         id_user: insertedUsers.find(
           user => user.email === 'fkinoo@ital-express.fr'
         ).id,
-        id_group: 32,
+        id_group: 3,
       },
       {
         id_user: insertedUsers.find(
           user => user.email === 'sdepierre@ital-express.fr'
         ).id,
-        id_group: 33,
+        id_group: 4,
       },
       {
         id_user: insertedUsers.find(
           user => user.email === 'tauneau@ital-express.fr'
         ).id,
-        id_group: 34,
+        id_group: 7,
       },
       {
         id_user: insertedUsers.find(
           user => user.email === 'jmneau@ital-express.fr'
         ).id,
-        id_group: 36,
+        id_group: 2,
       },
     ];
 

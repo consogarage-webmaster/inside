@@ -2,11 +2,16 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import 'dayjs/locale/fr.js';
 dayjs.locale('fr');
+import dotenv from 'dotenv';
 
-const apiKey = process.env.APIKEY; // Ensure API Key is set in environment variables
+dotenv.config();
+
+const apiKey = process.env.APIKEY;
+const cgApiKey = process.env.CGAPIKEY;
 import constantes from '../const/constantes.js';
 import Sector from '../models/Sector.js';
 import Zipcode from '../models/Zipcode.js';
+import User from '../models/User.js';
 // const quotationStates  =[1,2,3,4,5,6,7,13,15];
 let customerGroupsNames = [
   { id: 13, name: 'Hors secteur' },
@@ -21,8 +26,15 @@ let customerGroupsNames = [
 
 const italExpressController = {
   customersPage: async (req, res) => {
-    let customersApiUrl = `https://www.consogarage.com/consogarage-api/api/customers-italexpress.php?1=1`;
+    let customersApiUrl = `https://www.consogarage.com/consogarage-api/api/customers-italexpress.php?api_key=${cgApiKey}`;
     const filters = {};
+    console.log('my sector ' + JSON.stringify(req.user.sector));
+    const userZipcodes = await Zipcode.findAll({
+      where: {
+        id_sector: req.user.sector,
+      },
+    });
+    // console.log('myreq' + JSON.stringify(req.user.permissions));
     if (req.query.sector) {
       const foundZipcodes = await Zipcode.findAll({
         where: {
@@ -33,7 +45,7 @@ const italExpressController = {
       customersApiUrl += `&sector=${encodedZipcodes}`;
       filters.sector = req.query.sector;
 
-      console.log('zips : ' + foundZipcodes);
+      // console.log('zips : ' + foundZipcodes);
     }
     if (req.query.name) {
       customersApiUrl += `&name=${req.query.name}`;
@@ -110,6 +122,7 @@ const italExpressController = {
         allZipcodes: zipcodes,
         sectors: sectors,
         filters: filters,
+        userZipcodes: userZipcodes,
       });
     } catch (error) {
       console.error('Error fetching customers or details:', error);

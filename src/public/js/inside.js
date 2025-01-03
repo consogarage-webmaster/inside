@@ -471,6 +471,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const toDate = document.querySelector('#to-date').value;
 
         fetchCustomerOrders(customerId, fromDate, toDate);
+        console.log(`from : ${fromDate} to : ${toDate}`);
       });
 
       // Initial fetch without date filters
@@ -484,12 +485,12 @@ document.addEventListener('DOMContentLoaded', function () {
     toDate = null
   ) {
     // let apiUrl = `https://www.consogarage.com/api/orders?ws_key=${apiKey}&filter[id_customer]=[${customerId}]&filter[valid]=[1]&display=full&sort=[id_DESC]&output_format=JSON`;
-    let apiUrl = `/webservice/customerorders/${customerId}`;
-
-    console.log(apiUrl);
+    let apiUrl = `/webservice/customerorders/${customerId}?1=1`;
 
     // Add date filters if provided
-    if (fromDate) apiUrl += `&filter[invoice_date]=[${fromDate},${toDate}]`;
+    if (fromDate) apiUrl += `&fromdate=${fromDate}`;
+    if (toDate) apiUrl += `&todate=${toDate}`;
+    console.log(apiUrl);
 
     try {
       const response = await fetch(apiUrl);
@@ -502,9 +503,11 @@ document.addEventListener('DOMContentLoaded', function () {
       let countOrders = 0;
 
       const orderArray = orders.map(order => {
-        const orderId = order.id || 'N/A';
-        const totalPaid = parseFloat(order.total_paid) || 0;
-        const dateAdded = order.date_add || 'N/A';
+        const orderId = order.orderId || 'N/A';
+        const totalPaid = parseFloat(order.totalPaid) || 0;
+        const totalArticles = parseFloat(order.totalArticles).toFixed(2);
+        const totalShipping = parseFloat(order.totalShipping).toFixed(2);
+        const dateAdded = order.dateAdded || 'N/A';
 
         totalOrders += totalPaid;
         countOrders++;
@@ -512,8 +515,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return {
           orderId,
           totalPaid,
+          totalArticles,
+          totalShipping,
           dateAdded,
-          products: order.associations?.order_rows || [],
+          products: order.products || [],
         };
       });
 
@@ -526,23 +531,27 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="field column is-6">
                                 <label class="label" for="from-date">Depuis:</label>
                                 <div class="control">
-                                    <input class="input" type="date" id="from-date" name="from-date" value="${fromDate || ''}" required>
+                                    <input class="input" type="date" id="from-date" name="from-date" value="${fromDate || ''}">
                                 </div>
                             </div>
 
                             <div class="field column is-6">
                                 <label class="label" for="to-date">Jusqu'à :</label>
                                 <div class="control">
-                                    <input class="input" type="date" id="to-date" name="to-date" value="${toDate || ''}" required>
+                                    <input class="input" type="date" id="to-date" name="to-date" value="${toDate || ''}">
                                 </div>
                             </div>
-
                             <div class="field column is-12">
                                 <div class="control is-fullwidth">
                                     <button class="button is-primary is-small is-fullwidth" type="submit">Chercher</button>
                                 </div>
                             </div>
                         </form>
+                        <div class="field column is-12">
+                                <div class="control is-fullwidth">
+                                    <button id="reset-date-filters" class="button is-warning is-small is-fullwidth"onclick="resetDateFilters()">Clear</button>
+                                </div>
+                            </div>
                         <br/><strong>${countOrders}</strong> commande${countOrders > 1 ? 's' : ''}</div>
                     <div class="column has-text-right">Total : <br/>${totalOrders.toFixed(2)} €</div>
                 </div>
@@ -562,7 +571,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <th>Date</th>
                                 <th>Total articles</th>
                                 <th>Frais de port</th>
-                                
                             </tr>
                         </thead>
                         <tbody>
@@ -572,10 +580,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <tr>
                                     <td>${order.orderId}</td>
                                     <td>${order.dateAdded}</td>
-                                    <td class="has-text-right">à extraire</td>
-                                    <td class="has-text-right">à extraire</td>
-                                    
-                                    
+                                    <td class="has-text-right">${order.totalArticles}</td>
+                                    <td class="has-text-right">${order.totalShipping}</td>
                                 </tr>`
                               )
                               .join('')}
@@ -596,16 +602,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Define headers
         const headers = [
           'Order ID',
-          'Total Paid',
-          'Order Date',
-          'Product ID',
-          'Product Attribute ID',
-          'Product Name',
-          'Product Quantity',
+          'Invoice Date',
+          'Total Articles',
+          'Total Transport',
           'Product Reference',
-          'Product Price',
-          'Unit Price (incl. tax)',
-          'Unit Price (excl. tax)',
+          'Product Name',
+          'Product Unit Price',
+          'Product Quantity',
+          'Product Total',
         ];
 
         // Create an array of rows with the headers and order data
@@ -615,16 +619,14 @@ document.addEventListener('DOMContentLoaded', function () {
           order.products.forEach(product => {
             const row = [
               order.orderId,
-              order.totalPaid.toFixed(2),
               order.dateAdded,
-              product.product_id,
-              product.product_attribute_id,
-              product.product_name,
-              product.product_quantity,
+              parseFloat(order.totalArticles).toFixed(2),
+              parseFloat(order.totalShipping).toFixed(2),
               product.product_reference,
-              parseFloat(product.product_price).toFixed(2),
-              parseFloat(product.unit_price_tax_incl).toFixed(2),
+              product.product_name,
               parseFloat(product.unit_price_tax_excl).toFixed(2),
+              product.product_quantity,
+              parseFloat(product.total_price_tax_excl).toFixed(2),
             ];
             data.push(row);
           });
@@ -636,10 +638,14 @@ document.addEventListener('DOMContentLoaded', function () {
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
 
         // Convert the workbook to a binary string and trigger download
-        XLSX.writeFile(workbook, 'Orders_with_Products.xlsx');
+        XLSX.writeFile(
+          workbook,
+          `Customer-${customerId}_Orders_with_Products.xlsx`
+        );
       }
       const xlsDownloader = document.querySelector('#xls-dowloader');
       xlsDownloader.addEventListener('click', () => {
+        console.log(orderArray);
         generateXLSXWithProducts(orderArray);
       });
     } catch (error) {
@@ -662,10 +668,23 @@ document.addEventListener('DOMContentLoaded', function () {
         orderDetail.associations.order_rows.forEach(product => {
           modalContent.innerHTML += `${product.product_name}<hr/>`;
         });
-        // modalContent.innerHTML = `test`;
       } catch (e) {
         console.log('erreur lors de la récupération de la commande');
       }
+      // Reset date filters
+      // function initResetDateFilters() {
+      //   const resetButton = document.querySelector('#reset-date-filters');
+      //   resetButton.addEventListener('click', () => {
+      //     console.log('click');
+      //     const inputsToReset = document.querySelectorAll(
+      //       '#from-date, #to-date'
+      //     );
+      //     inputsToReset.forEach(input => {
+      //       input.value = '';
+      //     });
+      //   });
+      // }
+      // initResetDateFilters();
     });
   });
 });
@@ -769,4 +788,11 @@ function deleteUser(userId) {
     .catch(error => {
       console.error('Error:', error);
     });
+}
+function resetDateFilters() {
+  console.log('click');
+  const inputsToReset = document.querySelectorAll('#from-date, #to-date');
+  inputsToReset.forEach(input => {
+    input.value = '';
+  });
 }
