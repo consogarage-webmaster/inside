@@ -75,3 +75,4 @@ button.is-inside{
   #tab-content > div.is-active {
     display: block;
   }
+  svg{max-width:100%;}
